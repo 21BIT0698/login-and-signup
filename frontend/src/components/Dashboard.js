@@ -13,14 +13,12 @@ export default function Dashboard() {
       return;
     }
 
-    // fetch protected data
     axios
-      .get("http://localhost:5000/dashboard", {
+      .get(`${process.env.REACT_APP_API_URL}/dashboard`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setMsg(res.data.message))
       .catch(() => {
-       
         navigate("/login");
       });
   }, [navigate]);

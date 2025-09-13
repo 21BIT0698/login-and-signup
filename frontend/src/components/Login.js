@@ -11,9 +11,11 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/login", { email, password });
+      // ✅ Use environment variable instead of localhost
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, { email, password });
+
       localStorage.setItem("token", res.data.token);
-      navigate("/dashboard"); // ✅ go dashboard immediately
+      navigate("/dashboard"); // go dashboard immediately
     } catch (err) {
       setMsg(err.response?.data?.message || "Login failed");
     }

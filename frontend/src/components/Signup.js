@@ -12,7 +12,7 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/signup", {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/signup`, {
         name,
         email,
         password,
@@ -29,37 +29,14 @@ export default function Signup() {
       <div style={styles.formContainer}>
         <h2 style={{ color: "#2c3e50" }}>Signup</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
-          <input
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={styles.input}
-          />
-          <input
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={styles.input}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={styles.input}
-          />
-          <button type="submit" style={styles.button}>
-            Create Account
-          </button>
+          <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} style={styles.input} />
+          <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} style={styles.input} />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} style={styles.input} />
+          <button type="submit" style={styles.button}>Create Account</button>
         </form>
-
-        {/* ✅ Message after signup */}
         <p style={{ marginTop: "10px", color: "green" }}>{msg}</p>
-
-        {/* ✅ Login link placed BELOW form */}
         <p style={{ marginTop: "15px", textAlign: "center" }}>
-          Already have an account?{" "}
-          <Link to="/login" style={styles.link}>Login</Link>
+          Already have an account? <Link to="/login" style={styles.link}>Login</Link>
         </p>
       </div>
     </div>
@@ -67,44 +44,10 @@ export default function Signup() {
 }
 
 const styles = {
-  page: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh",
-    background: "linear-gradient(to right, #74ebd5, #ACB6E5)",
-  },
-  formContainer: {
-    background: "#fff",
-    padding: "30px",
-    borderRadius: "12px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-    width: "300px",
-    textAlign: "center",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
-  },
-  input: {
-    padding: "10px",
-    borderRadius: "8px",
-    border: "1px solid #ccc",
-    outline: "none",
-  },
-  button: {
-    padding: "10px",
-    backgroundColor: "#2ecc71",
-    color: "white",
-    fontWeight: "bold",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-  },
-  link: {
-    color: "#2980b9",
-    fontWeight: "bold",
-    textDecoration: "none",
-  },
+  page: { display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", background: "linear-gradient(to right, #74ebd5, #ACB6E5)" },
+  formContainer: { background: "#fff", padding: "30px", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)", width: "300px", textAlign: "center" },
+  form: { display: "flex", flexDirection: "column", gap: "12px" },
+  input: { padding: "10px", borderRadius: "8px", border: "1px solid #ccc", outline: "none" },
+  button: { padding: "10px", backgroundColor: "#2ecc71", color: "white", fontWeight: "bold", border: "none", borderRadius: "8px", cursor: "pointer" },
+  link: { color: "#2980b9", fontWeight: "bold", textDecoration: "none" },
 };
