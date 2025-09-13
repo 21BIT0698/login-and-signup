@@ -12,7 +12,7 @@ export default function Login() {
     e.preventDefault();
     try {
       // ✅ Use environment variable instead of localhost
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, { email, password });
+             const res = await axios.post(`${process.env.REACT_APP_API_URL}/login`, { email, password });
 
       localStorage.setItem("token", res.data.token);
       navigate("/dashboard"); // go dashboard immediately
