@@ -17,10 +17,14 @@ export default function Signup() {
         email,
         password,
       });
-      setMsg(res.data.message);
-      setTimeout(() => navigate("/login"), 1000);
+
+      // ✅ Show popup message
+      alert("Successfully signed up! You can login now.");
+
+      // Navigate to login page
+      navigate("/login");
     } catch (err) {
-      setMsg(err.response?.data?.message || "Signup failed");
+      alert(err.response?.data?.message || "Signup failed");
     }
   };
 
@@ -34,7 +38,6 @@ export default function Signup() {
           <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} style={styles.input} />
           <button type="submit" style={styles.button}>Create Account</button>
         </form>
-        <p style={{ marginTop: "10px", color: "green" }}>{msg}</p>
         <p style={{ marginTop: "15px", textAlign: "center" }}>
           Already have an account? <Link to="/login" style={styles.link}>Login</Link>
         </p>
