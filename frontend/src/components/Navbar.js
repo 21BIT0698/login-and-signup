@@ -1,22 +1,38 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // loggedIn true if token exists
+  const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem("token"));
+
+  useEffect(() => {
+    const handleStorageChange = () => setLoggedIn(!!localStorage.getItem("token"));
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // clear token
+    localStorage.removeItem("token");
+    setLoggedIn(false);
     navigate("/login");
   };
 
+  // Hide Navbar buttons on login/signup pages
+  const hideButtons = location.pathname === "/login" || location.pathname === "/signup";
+
   return (
     <nav style={styles.navbar}>
-      <div style={styles.logo}>🌍 My MERN App</div>
+      <div style={styles.logo}>🌍 My Mern App</div>
       <div style={styles.links}>
-        <Link to="/signup" style={styles.link}>Signup</Link>
-        <Link to="/login" style={styles.link}>Login</Link>
-        <Link to="/dashboard" style={styles.link}>Dashboard</Link>
-        <button onClick={handleLogout} style={styles.logoutBtn}>Logout</button>
+        {!hideButtons && loggedIn && (
+          <>
+            {/* Dashboard button hidden */}
+            <button style={{ ...styles.btn, background: "#c0392b" }} onClick={handleLogout}>Logout</button>
+          </>
+        )}
       </div>
     </nav>
   );
@@ -31,26 +47,16 @@ const styles = {
     background: "linear-gradient(to right, #6a11cb, #2575fc)",
     color: "white",
   },
-  logo: {
-    fontWeight: "bold",
-    fontSize: "20px",
-  },
-  links: {
-    display: "flex",
-    alignItems: "center",
-    gap: "15px",
-  },
-  link: {
-    color: "white",
-    textDecoration: "none",
-    fontWeight: "500",
-  },
-  logoutBtn: {
-    background: "#e74c3c",
+  logo: { fontWeight: "bold", fontSize: "22px" },
+  links: { display: "flex", alignItems: "center", gap: "12px" },
+  btn: {
+    padding: "8px 16px",
+    borderRadius: "8px",
     border: "none",
     color: "white",
-    padding: "6px 12px",
-    borderRadius: "6px",
     cursor: "pointer",
+    fontWeight: "500",
+    fontSize: "15px",
+    transition: "0.3s",
   },
 };

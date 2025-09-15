@@ -11,11 +11,17 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // ✅ Use environment variable instead of localhost
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, { email, password });
+      // Login API call
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/login`, { email, password });
 
+      // Save token
       localStorage.setItem("token", res.data.token);
-      navigate("/dashboard"); // go dashboard immediately
+
+      // ✅ Trigger Navbar update instantly
+      window.dispatchEvent(new Event("storage"));
+
+      // Navigate to dashboard
+      navigate("/dashboard");
     } catch (err) {
       setMsg(err.response?.data?.message || "Login failed");
     }
@@ -26,12 +32,23 @@ export default function Login() {
       <div style={styles.formContainer}>
         <h2>Login</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
-          <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} style={styles.input} />
-          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} style={styles.input} />
+          <input
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={styles.input}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={styles.input}
+          />
           <button type="submit" style={styles.button}>Login</button>
         </form>
         <p style={{ color: "red", marginTop: "10px" }}>{msg}</p>
-        <p style={{ marginTop: "10px" }}>Don't have an account? <Link to="/signup">Signup</Link></p>
+        
       </div>
     </div>
   );
@@ -43,4 +60,4 @@ const styles = {
   form: { display: "flex", flexDirection: "column", gap: 12 },
   input: { padding: 10, borderRadius: 8, border: "1px solid #ccc", outline: "none" },
   button: { padding: 10, backgroundColor: "#2980b9", color: "white", fontWeight: "bold", border: "none", borderRadius: 8, cursor: "pointer" },
-};
+};  
