@@ -60,4 +60,4 @@ const styles = {
   form: { display: "flex", flexDirection: "column", gap: 12 },
   input: { padding: 10, borderRadius: 8, border: "1px solid #ccc", outline: "none" },
   button: { padding: 10, backgroundColor: "#2980b9", color: "white", fontWeight: "bold", border: "none", borderRadius: 8, cursor: "pointer" },
-};  
+};
