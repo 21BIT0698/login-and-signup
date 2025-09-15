@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import Swal from "sweetalert2";
+import Swal from "sweetalert2"; // ✅ Import SweetAlert2
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -12,21 +12,23 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/signup`, {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/signup`, {
         name,
         email,
         password,
       });
 
+      // ✅ SweetAlert2 success popup
       Swal.fire({
         icon: 'success',
         title: 'Signup Successful',
         text: 'You can login now!',
         confirmButtonColor: '#2ecc71',
       }).then(() => {
-        navigate("/login");
+        navigate("/login"); // Navigate after popup
       });
     } catch (err) {
+      // ✅ SweetAlert2 error popup
       Swal.fire({
         icon: 'error',
         title: 'Signup Failed',
