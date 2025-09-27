@@ -11,10 +11,15 @@ export default function Navbar() {
     const handleStorageChange = () => {
       setLoggedIn(!!localStorage.getItem("token"));
       setRole(localStorage.getItem("role"));
+
+      // If token removed from another tab, redirect to login
+      if (!localStorage.getItem("token")) {
+        navigate("/login", { replace: true });
+      }
     };
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+  }, [navigate]);
 
   const handleLogout = () => {
     // Remove token & role
@@ -25,8 +30,10 @@ export default function Navbar() {
     setLoggedIn(false);
     setRole(null);
 
-    // Navigate to login page
-    navigate("/login", { replace: true });
+    // Navigate to login after tiny delay
+    setTimeout(() => {
+      navigate("/login", { replace: true });
+    }, 50);
   };
 
   // Hide buttons on login/signup page
