@@ -7,15 +7,14 @@ export default function Dashboard() {
 
   return (
     <div style={styles.page}>
-      <div style={styles.box}>
-        <h2>Dashboard</h2>
-        {role==="student" && (
+      <div style={styles.buttonsContainer}>
+        {role === "student" && (
           <>
             <button style={styles.button} onClick={()=>navigate("/create-profile")}>Create Profile</button>
             <button style={styles.button} onClick={()=>navigate("/view-profile")}>View Profile</button>
           </>
         )}
-        {role==="admin" && (
+        {role === "admin" && (
           <button style={styles.button} onClick={()=>navigate("/admin/students")}>View All Students</button>
         )}
       </div>
@@ -24,7 +23,28 @@ export default function Dashboard() {
 }
 
 const styles = {
-  page: { display:"flex", justifyContent:"center", alignItems:"center", height:"90vh", background:"linear-gradient(to right, #f7971e, #ffd200)" },
-  box: { background:"#fff", padding:30, borderRadius:12, textAlign:"center", boxShadow:"0 4px 12px rgba(0,0,0,0.1)" },
-  button: { padding:10, margin:10, backgroundColor:"#2980b9", color:"white", border:"none", borderRadius:8, cursor:"pointer" }
+  page: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100vh",
+    background: "linear-gradient(to right, #f7971e, #ffd200)"
+  },
+  buttonsContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 30,
+    width: "300px"
+  },
+  button: {
+    padding: 25,
+    backgroundColor: "#2980b9",
+    color: "white",
+    border: "none",
+    borderRadius: 12,
+    fontSize: 20,
+    cursor: "pointer",
+    fontWeight: "bold"
+  }
 };

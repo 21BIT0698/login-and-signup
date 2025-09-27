@@ -31,10 +31,11 @@ import Studentviewprofile from "./components/Studentviewprofile";
 import Adminstudents from "./components/Adminstudent";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
-  const [role, setRole] = useState(localStorage.getItem("role"));
+  // Browser first load பண்ணும் போது false
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole] = useState(null);
 
-  // Listen to storage events (triggered from Login.js)
+  // Login/Logout update capture பண்ணும்
   useEffect(() => {
     const handleStorageChange = () => {
       setIsLoggedIn(!!localStorage.getItem("token"));
@@ -48,7 +49,8 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Navigate to="/signup" replace />} />
+        {/* Default page: always signup first */}
+        <Route path="/" element={<Signup />} />
 
         {/* Public Routes */}
         <Route path="/signup" element={isLoggedIn ? <Navigate to="/dashboard" /> : <Signup />} />
@@ -65,4 +67,5 @@ function App() {
 }
 
 export default App;
+
 

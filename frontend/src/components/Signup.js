@@ -105,7 +105,7 @@
 // };
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
 export default function Signup() {
@@ -149,6 +149,11 @@ export default function Signup() {
           </select>
           <button type="submit" style={styles.button}>Create Account</button>
         </form>
+
+        {/* Link for already registered users */}
+        <p style={{ marginTop: 15, textAlign: "center" }}>
+          Already have an account? <Link to="/login" style={{ color: "#2980b9", fontWeight: "bold", textDecoration: "none" }}>Login</Link>
+        </p>
       </div>
     </div>
   );
@@ -161,4 +166,3 @@ const styles = {
   input: { padding:10, borderRadius:8, border:"1px solid #ccc", outline:"none" },
   button: { padding:10, backgroundColor:"#2ecc71", color:"white", fontWeight:"bold", border:"none", borderRadius:8, cursor:"pointer" }
 };
-

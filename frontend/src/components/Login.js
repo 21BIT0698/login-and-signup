@@ -110,9 +110,7 @@ export default function Login() {
           <button type="submit" style={styles.button}>Login</button>
         </form>
         {msg && <p style={{ color: "red", marginTop: 10 }}>{msg}</p>}
-        <p style={{ marginTop: 15, textAlign: "center" }}>
-          Don't have an account? <Link to="/signup" style={styles.link}>Signup</Link>
-        </p>
+      
       </div>
     </div>
   );
