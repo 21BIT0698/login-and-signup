@@ -101,7 +101,7 @@ const styles = {
   table: {
     borderCollapse: "collapse",
     width: "100%",
-    minWidth: 1400,
+    minWidth: 1400, // ensures no column squishes
     boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
   },
   th: {
@@ -109,12 +109,12 @@ const styles = {
     textAlign: "left",
     backgroundColor: "#2c3e50",
     color: "#fff",
-    border: "2px solid #000", // darker border
+    border: "2px solid #000", // 🔥 dark border
     minWidth: "120px",
   },
   td: {
     padding: "10px",
-    border: "2px solid #000", // darker border
+    border: "2px solid #000", // 🔥 dark border
     fontSize: "14px",
   },
 };
