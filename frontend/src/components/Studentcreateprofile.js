@@ -11,7 +11,7 @@ export default function CreateProfile() {
     email: "",
     phone: "",
     gender: "",
-    dob: "",
+    dob: "", // will send as dateOfBirth
   });
 
   const [address, setAddress] = useState({
@@ -40,7 +40,6 @@ export default function CreateProfile() {
 
   const [errors, setErrors] = useState({});
 
-  // Dropdown data (city removed)
   const countries = ["India", "USA", "UK", "Canada", "Australia", "Germany", "France", "Italy", "Japan", "China", "Brazil", "Mexico", "South Africa", "Russia", "Spain", "Sweden", "Norway", "Switzerland", "Netherlands", "New Zealand", "Other"];
   const states = ["Tamil Nadu", "Kerala", "Karnataka", "Maharashtra"];
   const districts = ["Chennai", "Coimbatore", "Madurai", "Vellore", "Tirunelveli", "Salem", "Erode"];
@@ -52,21 +51,18 @@ export default function CreateProfile() {
   const validate = () => {
     let tempErrors = {};
 
-    // Personal validation
     if (!personal.name) tempErrors.name = true;
     if (!personal.email) tempErrors.email = true;
     if (!personal.phone) tempErrors.phone = true;
     if (!personal.gender) tempErrors.gender = true;
     if (!personal.dob) tempErrors.dob = true;
 
-    // Address validation
     if (!address.country) tempErrors.country = true;
     if (address.country === "Other" && !address.otherCountry) tempErrors.otherCountry = true;
     if (!address.state) tempErrors.state = true;
     if (!address.district) tempErrors.district = true;
     if (!address.line) tempErrors.line = true;
 
-    // Education validation
     if (!education.tenth.school) tempErrors.tenthSchool = true;
     if (education.tenth.school === "Other" && !education.tenth.otherSchool) tempErrors.tenthOtherSchool = true;
     if (!education.tenth.place) tempErrors.tenthPlace = true;
@@ -88,7 +84,6 @@ export default function CreateProfile() {
     if (!education.ug.activeBacklogs) tempErrors.ugActiveBacklogs = true;
 
     setErrors(tempErrors);
-
     return Object.keys(tempErrors).length === 0;
   };
 
@@ -96,8 +91,12 @@ export default function CreateProfile() {
     e.preventDefault();
     if (!validate()) return;
 
+    // Backend-compatible payload
     const payload = {
-      personal,
+      personal: {
+        ...personal,
+        dateOfBirth: personal.dob, // backend expects dateOfBirth
+      },
       address: {
         ...address,
         country: address.country === "Other" ? address.otherCountry : address.country,
@@ -115,6 +114,7 @@ export default function CreateProfile() {
           ...education.ug,
           university: education.ug.university === "Other" ? education.ug.otherUniversity : education.ug.university,
           college: education.ug.college === "Other" ? education.ug.otherCollege : education.ug.college,
+          activeBacklogs: education.ug.activeBacklogs === "Yes" ? 1 : 0, // convert to number
         },
       },
     };
@@ -124,9 +124,15 @@ export default function CreateProfile() {
       await axios.post(`${process.env.REACT_APP_API_URL}/profile`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      Swal.fire({ icon: "success", title: "Profile Created", confirmButtonColor: "#2ecc71" }).then(() => navigate("/view-profile"));
+      Swal.fire({ icon: "success", title: "Profile Created", confirmButtonColor: "#2ecc71" })
+        .then(() => navigate("/view-profile"));
     } catch (err) {
-      Swal.fire({ icon: "error", title: "Error", text: err.response?.data?.message || "Something went wrong", confirmButtonColor: "#e74c3c" });
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: err.response?.data?.message || "Something went wrong",
+        confirmButtonColor: "#e74c3c"
+      });
     }
   };
 

@@ -164,12 +164,10 @@ app.post("/profile", auth, async (req, res) => {
   if(req.role !== "student") return res.status(403).json({ message: "Only students can create profile" });
   const existing = await Profile.findOne({ userId: req.userId });
   if(existing) return res.status(400).json({ message: "Profile already exists" });
-
   const profile = new Profile({ userId: req.userId, ...req.body });
   await profile.save();
   res.json({ message: "Profile created" });
 });
-
 
 // View profile (student)
 app.get("/profile", auth, async (req, res) => {
@@ -180,11 +178,23 @@ app.get("/profile", auth, async (req, res) => {
 });
 
 // View all students (admin)
+// View all students (admin) – updated
 app.get("/admin/students", auth, async (req, res) => {
-  if(req.role !== "admin") return res.status(403).json({ message: "Only admin can view all students" });
-  const students = await User.find({ role: "student" }).select("-password");
-  res.json(students);
+  if (req.role !== "admin") 
+    return res.status(403).json({ message: "Only admin can view all students" });
+
+  try {
+    // Profile data fetch with user name & email
+    const students = await Profile.find()
+      .populate("userId", "name email")
+      .exec();
+
+    res.json(students);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

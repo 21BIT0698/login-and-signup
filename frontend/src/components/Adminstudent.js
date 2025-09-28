@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"; 
 import axios from "axios";
 
 export default function AdminStudents() {
@@ -43,17 +43,17 @@ export default function AdminStudents() {
         <tbody>
           {students.map((student, idx) => (
             <tr key={idx}>
-              <td>{student.personal.name}</td>
-              <td>{student.personal.email}</td>
-              <td>{student.address.state}</td>
-              <td>{student.address.city}</td>
-              <td>{student.education.tenth.school}</td>
-              <td>{student.education.tenth.percentage}</td>
-              <td>{student.education.twelfth.school}</td>
-              <td>{student.education.twelfth.percentage}</td>
-              <td>{student.education.ug.college}</td>
-              <td>{student.education.ug.department}</td>
-              <td>{student.education.ug.cgpa}</td>
+              <td>{student.personal?.name || "N/A"}</td>
+              <td>{student.personal?.email || "N/A"}</td>
+              <td>{student.address?.state || "N/A"}</td>
+              <td>{student.address?.city || "N/A"}</td>
+              <td>{student.education?.tenth?.school || "N/A"}</td>
+              <td>{student.education?.tenth?.percentage || "N/A"}</td>
+              <td>{student.education?.twelfth?.school || "N/A"}</td>
+              <td>{student.education?.twelfth?.percentage || "N/A"}</td>
+              <td>{student.education?.ug?.college || "N/A"}</td>
+              <td>{student.education?.ug?.department || "N/A"}</td>
+              <td>{student.education?.ug?.cgpa || "N/A"}</td>
             </tr>
           ))}
         </tbody>
@@ -79,15 +79,5 @@ const styles = {
     width: "95%",
     maxWidth: 1200,
     boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-  },
-  th: {
-    backgroundColor: "#2980b9",
-    color: "#fff",
-    padding: 10,
-    textAlign: "left",
-  },
-  td: {
-    padding: 10,
-    borderBottom: "1px solid #ddd",
   },
 };
