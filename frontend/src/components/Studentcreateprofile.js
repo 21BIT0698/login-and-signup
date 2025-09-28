@@ -11,7 +11,7 @@ export default function CreateProfile() {
     email: "",
     phone: "",
     gender: "",
-    dob: "", // will send as dateOfBirth
+    dob: "",
   });
 
   const [address, setAddress] = useState({
@@ -50,29 +50,24 @@ export default function CreateProfile() {
 
   const validate = () => {
     let tempErrors = {};
-
     if (!personal.name) tempErrors.name = true;
     if (!personal.email) tempErrors.email = true;
     if (!personal.phone) tempErrors.phone = true;
     if (!personal.gender) tempErrors.gender = true;
     if (!personal.dob) tempErrors.dob = true;
-
     if (!address.country) tempErrors.country = true;
     if (address.country === "Other" && !address.otherCountry) tempErrors.otherCountry = true;
     if (!address.state) tempErrors.state = true;
     if (!address.district) tempErrors.district = true;
     if (!address.line) tempErrors.line = true;
-
     if (!education.tenth.school) tempErrors.tenthSchool = true;
     if (education.tenth.school === "Other" && !education.tenth.otherSchool) tempErrors.tenthOtherSchool = true;
     if (!education.tenth.place) tempErrors.tenthPlace = true;
     if (!education.tenth.percentage) tempErrors.tenthPercentage = true;
-
     if (!education.twelfth.school) tempErrors.twelfthSchool = true;
     if (education.twelfth.school === "Other" && !education.twelfth.otherSchool) tempErrors.twelfthOtherSchool = true;
     if (!education.twelfth.place) tempErrors.twelfthPlace = true;
     if (!education.twelfth.percentage) tempErrors.twelfthPercentage = true;
-
     if (!education.ug.university) tempErrors.ugUniversity = true;
     if (education.ug.university === "Other" && !education.ug.otherUniversity) tempErrors.ugOtherUniversity = true;
     if (!education.ug.college) tempErrors.ugCollege = true;
@@ -82,7 +77,6 @@ export default function CreateProfile() {
     if (!education.ug.graduationYear) tempErrors.ugGraduationYear = true;
     if (!education.ug.place) tempErrors.ugPlace = true;
     if (!education.ug.activeBacklogs) tempErrors.ugActiveBacklogs = true;
-
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
@@ -91,30 +85,17 @@ export default function CreateProfile() {
     e.preventDefault();
     if (!validate()) return;
 
-    // Backend-compatible payload
     const payload = {
-      personal: {
-        ...personal,
-        dateOfBirth: personal.dob, // backend expects dateOfBirth
-      },
-      address: {
-        ...address,
-        country: address.country === "Other" ? address.otherCountry : address.country,
-      },
+      personal: { ...personal, dateOfBirth: personal.dob },
+      address: { ...address, country: address.country === "Other" ? address.otherCountry : address.country },
       education: {
-        tenth: {
-          ...education.tenth,
-          school: education.tenth.school === "Other" ? education.tenth.otherSchool : education.tenth.school,
-        },
-        twelfth: {
-          ...education.twelfth,
-          school: education.twelfth.school === "Other" ? education.twelfth.otherSchool : education.twelfth.school,
-        },
+        tenth: { ...education.tenth, school: education.tenth.school === "Other" ? education.tenth.otherSchool : education.tenth.school },
+        twelfth: { ...education.twelfth, school: education.twelfth.school === "Other" ? education.twelfth.otherSchool : education.twelfth.school },
         ug: {
           ...education.ug,
           university: education.ug.university === "Other" ? education.ug.otherUniversity : education.ug.university,
           college: education.ug.college === "Other" ? education.ug.otherCollege : education.ug.college,
-          activeBacklogs: education.ug.activeBacklogs === "Yes" ? 1 : 0, // convert to number
+          activeBacklogs: education.ug.activeBacklogs === "Yes" ? 1 : 0,
         },
       },
     };
@@ -127,12 +108,7 @@ export default function CreateProfile() {
       Swal.fire({ icon: "success", title: "Profile Created", confirmButtonColor: "#2ecc71" })
         .then(() => navigate("/view-profile"));
     } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: err.response?.data?.message || "Something went wrong",
-        confirmButtonColor: "#e74c3c"
-      });
+      Swal.fire({ icon: "error", title: "Error", text: err.response?.data?.message || "Something went wrong", confirmButtonColor: "#e74c3c" });
     }
   };
 
@@ -144,10 +120,10 @@ export default function CreateProfile() {
   return (
     <div style={styles.page}>
       <div style={styles.formContainer}>
-        <h2>Create Profile</h2>
+        <h2 style={styles.heading}>Create Profile</h2>
+
         <form onSubmit={handleSubmit} style={styles.form}>
-          {/* Personal Info */}
-          <h4>Personal Info</h4>
+          <h4 style={styles.sectionHeading}>Personal Info</h4>
           <input placeholder="Name" value={personal.name} onChange={(e) => setPersonal({ ...personal, name: e.target.value })} style={getInputStyle("name")} />
           <input placeholder="Email" value={personal.email} onChange={(e) => setPersonal({ ...personal, email: e.target.value })} style={getInputStyle("email")} />
           <input placeholder="Phone Number" value={personal.phone} onChange={(e) => setPersonal({ ...personal, phone: e.target.value })} style={getInputStyle("phone")} />
@@ -159,8 +135,7 @@ export default function CreateProfile() {
           </select>
           <input type="date" value={personal.dob} onChange={(e) => setPersonal({ ...personal, dob: e.target.value })} style={getInputStyle("dob")} />
 
-          {/* Address */}
-          <h4>Address</h4>
+          <h4 style={styles.sectionHeading}>Address</h4>
           <select value={address.country} onChange={(e) => setAddress({ ...address, country: e.target.value })} style={getInputStyle("country")}>
             <option value="">Select Country</option>
             {countries.map((c, i) => <option key={i} value={c}>{c}</option>)}
@@ -176,10 +151,9 @@ export default function CreateProfile() {
           </select>
           <textarea placeholder="Address Line" value={address.line} onChange={(e) => setAddress({ ...address, line: e.target.value })} style={{ ...getInputStyle("line"), height: 60, resize: "vertical" }} />
 
-          {/* Education */}
-          <h4>Education</h4>
-          {/* 10th */}
-          <h5>10th</h5>
+          <h4 style={styles.sectionHeading}>Education</h4>
+
+          <h5 style={styles.subHeading}>10th</h5>
           <select value={education.tenth.school} onChange={(e) => setEducation({ ...education, tenth: { ...education.tenth, school: e.target.value } })} style={getInputStyle("tenthSchool")}>
             <option value="">Select School</option>
             {schools.map((s, i) => <option key={i} value={s}>{s}</option>)}
@@ -188,8 +162,7 @@ export default function CreateProfile() {
           <input placeholder="Place/City" value={education.tenth.place} onChange={(e) => setEducation({ ...education, tenth: { ...education.tenth, place: e.target.value } })} style={getInputStyle("tenthPlace")} />
           <input placeholder="Percentage" value={education.tenth.percentage} onChange={(e) => setEducation({ ...education, tenth: { ...education.tenth, percentage: e.target.value } })} style={getInputStyle("tenthPercentage")} />
 
-          {/* 12th */}
-          <h5>12th</h5>
+          <h5 style={styles.subHeading}>12th</h5>
           <select value={education.twelfth.school} onChange={(e) => setEducation({ ...education, twelfth: { ...education.twelfth, school: e.target.value } })} style={getInputStyle("twelfthSchool")}>
             <option value="">Select School</option>
             {schools.map((s, i) => <option key={i} value={s}>{s}</option>)}
@@ -198,26 +171,22 @@ export default function CreateProfile() {
           <input placeholder="Place/City" value={education.twelfth.place} onChange={(e) => setEducation({ ...education, twelfth: { ...education.twelfth, place: e.target.value } })} style={getInputStyle("twelfthPlace")} />
           <input placeholder="Percentage" value={education.twelfth.percentage} onChange={(e) => setEducation({ ...education, twelfth: { ...education.twelfth, percentage: e.target.value } })} style={getInputStyle("twelfthPercentage")} />
 
-          {/* UG */}
-          <h5>UG</h5>
+          <h5 style={styles.subHeading}>UG</h5>
           <select value={education.ug.university} onChange={(e) => setEducation({ ...education, ug: { ...education.ug, university: e.target.value } })} style={getInputStyle("ugUniversity")}>
             <option value="">Select University</option>
             {universities.map((u, i) => <option key={i} value={u}>{u}</option>)}
           </select>
           {education.ug.university === "Other" && <input placeholder="Enter University Name" value={education.ug.otherUniversity} onChange={(e) => setEducation({ ...education, ug: { ...education.ug, otherUniversity: e.target.value } })} style={getInputStyle("ugOtherUniversity")} />}
           <input placeholder="Place/City" value={education.ug.place} onChange={(e) => setEducation({ ...education, ug: { ...education.ug, place: e.target.value } })} style={getInputStyle("ugPlace")} />
-
           <select value={education.ug.college} onChange={(e) => setEducation({ ...education, ug: { ...education.ug, college: e.target.value } })} style={getInputStyle("ugCollege")}>
             <option value="">Select College</option>
             {colleges.map((c, i) => <option key={i} value={c}>{c}</option>)}
           </select>
           {education.ug.college === "Other" && <input placeholder="Enter College Name" value={education.ug.otherCollege} onChange={(e) => setEducation({ ...education, ug: { ...education.ug, otherCollege: e.target.value } })} style={getInputStyle("ugOtherCollege")} />}
-
           <select value={education.ug.department} onChange={(e) => setEducation({ ...education, ug: { ...education.ug, department: e.target.value } })} style={getInputStyle("ugDepartment")}>
             <option value="">Select Department</option>
             {departments.map((d, i) => <option key={i} value={d}>{d}</option>)}
           </select>
-
           <input placeholder="CGPA" value={education.ug.cgpa} onChange={(e) => setEducation({ ...education, ug: { ...education.ug, cgpa: e.target.value } })} style={getInputStyle("ugCgpa")} />
           <input placeholder="Graduation Year" value={education.ug.graduationYear} onChange={(e) => setEducation({ ...education, ug: { ...education.ug, graduationYear: e.target.value } })} style={getInputStyle("ugGraduationYear")} />
           <select value={education.ug.activeBacklogs} onChange={(e) => setEducation({ ...education, ug: { ...education.ug, activeBacklogs: e.target.value } })} style={getInputStyle("ugActiveBacklogs")}>
@@ -239,4 +208,9 @@ const styles = {
   form: { display: "flex", flexDirection: "column", gap: 10 },
   input: { padding: 8, borderRadius: 6, border: "1px solid #ccc", outline: "none" },
   button: { padding: 10, marginTop: 10, backgroundColor: "#2ecc71", color: "white", border: "none", borderRadius: 8, cursor: "pointer" },
+
+  // Headings style
+  heading: { textAlign: "center", fontSize: "26px", fontWeight: "bold", color: "#27ae60", marginBottom: "20px", textDecoration: "underline" },
+  sectionHeading: { fontSize: "20px", fontWeight: "bold", color: "#2c3e50", marginTop: "15px", marginBottom: "10px", borderBottom: "2px solid #27ae60", paddingBottom: "5px" },
+  subHeading: { fontSize: "16px", fontWeight: "bold", color: "#34495e", marginTop: "10px", marginBottom: "5px" },
 };
