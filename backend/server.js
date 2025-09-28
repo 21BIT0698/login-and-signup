@@ -90,14 +90,34 @@ const userSchema = new mongoose.Schema({
 
 const profileSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  personal: { name: String, email: String },
-  address: { state: String, city: String, country: String, line: String },
+  personal: { 
+    name: String, 
+    email: String, 
+    phone: String, 
+    gender: String, 
+    dateOfBirth: String 
+  },
+  address: { 
+    country: String, 
+    state: String, 
+    district: String, 
+    line: String 
+  },
   education: {
     tenth: { school: String, place: String, percentage: String },
     twelfth: { school: String, place: String, percentage: String },
-    ug: { university: String, college: String, department: String, cgpa: String, graduationYear: String, place: String }
+    ug: { 
+      university: String, 
+      college: String, 
+      department: String, 
+      cgpa: String, 
+      graduationYear: String, 
+      place: String, 
+      activeBacklogs: Number 
+    }
   }
 });
+
 
 const User = mongoose.model("User", userSchema);
 const Profile = mongoose.model("Profile", profileSchema);
@@ -144,10 +164,12 @@ app.post("/profile", auth, async (req, res) => {
   if(req.role !== "student") return res.status(403).json({ message: "Only students can create profile" });
   const existing = await Profile.findOne({ userId: req.userId });
   if(existing) return res.status(400).json({ message: "Profile already exists" });
+
   const profile = new Profile({ userId: req.userId, ...req.body });
   await profile.save();
   res.json({ message: "Profile created" });
 });
+
 
 // View profile (student)
 app.get("/profile", auth, async (req, res) => {
