@@ -76,7 +76,7 @@ export default function AdminStudents() {
                 <td style={styles.td}>{student.education?.ug?.cgpa || "N/A"}</td>
                 <td style={styles.td}>{student.education?.ug?.graduationYear || "N/A"}</td>
                 <td style={styles.td}>{student.education?.ug?.place || "N/A"}</td>
-                <td style={styles.td}>{student.education?.ug?.activeBacklogs === 1 ? "Yes" : "No"}</td>
+                <td style={styles.td}>{student.education?.ug?.activeBacklogs === "Yes" ? "Yes" : "No"}</td>
               </tr>
             ))}
           </tbody>

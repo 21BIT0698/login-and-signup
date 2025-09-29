@@ -12,7 +12,6 @@ export default function Navbar() {
       setLoggedIn(!!localStorage.getItem("token"));
       setRole(localStorage.getItem("role"));
 
-      // If token removed from another tab, redirect to login
       if (!localStorage.getItem("token")) {
         navigate("/login", { replace: true });
       }
@@ -22,21 +21,16 @@ export default function Navbar() {
   }, [navigate]);
 
   const handleLogout = () => {
-    // Remove token & role
     localStorage.removeItem("token");
     localStorage.removeItem("role");
 
-    // Update state
     setLoggedIn(false);
     setRole(null);
 
-    // Navigate to login after tiny delay
-    setTimeout(() => {
-      navigate("/login", { replace: true });
-    }, 50);
+    // ✅ Direct force redirect (no delay)
+    window.location.href = "/login";
   };
 
-  // Hide buttons on login/signup page
   const hideButtons = location.pathname === "/login" || location.pathname === "/signup";
 
   return (
@@ -48,7 +42,7 @@ export default function Navbar() {
         )}
         {!hideButtons && loggedIn && role === "admin" && (
           <>
-            <button style={styles.btn} onClick={() => navigate("/admin/students")}>View All Students</button>
+            
             <button style={styles.btn} onClick={handleLogout}>Logout</button>
           </>
         )}
@@ -74,7 +68,7 @@ const styles = {
     border: "none",
     cursor: "pointer",
     fontWeight: "500",
-    background: "#2980b9",
+    background: "orange",
     color: "white"
   }
 };

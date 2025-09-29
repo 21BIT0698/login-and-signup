@@ -29,13 +29,12 @@ import Dashboard from "./components/Dashboard";
 import Studentcreateprofile from "./components/Studentcreateprofile";
 import Studentviewprofile from "./components/Studentviewprofile";
 import Adminstudents from "./components/Adminstudent";
-
 function App() {
-  // Browser first load பண்ணும் போது false
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState(null);
+  // Initial state direct ah localStorage la irundhu check pannu
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const [role, setRole] = useState(localStorage.getItem("role"));
 
-  // Login/Logout update capture பண்ணும்
+  // Login/Logout update capture panna
   useEffect(() => {
     const handleStorageChange = () => {
       setIsLoggedIn(!!localStorage.getItem("token"));
@@ -49,7 +48,6 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        {/* Default page: always signup first */}
         <Route path="/" element={<Signup />} />
 
         {/* Public Routes */}
@@ -65,6 +63,8 @@ function App() {
     </Router>
   );
 }
+
+
 
 export default App;
 

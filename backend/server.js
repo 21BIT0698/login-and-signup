@@ -113,8 +113,11 @@ const profileSchema = new mongoose.Schema({
       cgpa: String, 
       graduationYear: String, 
       place: String, 
-      activeBacklogs: Number 
-    }
+      
+       activeBacklogs: { type: String, enum: ["Yes", "No"], default: "No" } // ✅ changed
+}
+
+    
   }
 });
 
