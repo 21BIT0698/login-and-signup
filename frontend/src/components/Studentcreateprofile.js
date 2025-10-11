@@ -48,7 +48,7 @@ export default function CreateProfile() {
   const districts = ["Chennai", "Coimbatore", "Madurai", "Vellore","tiruvannamalai","kanjipuram","tirunelveli","chengalpattu", "Tirunelveli","karur","sivagangai", "Salem","coimbatore", "Erode", "Other"];
   const schools = ["Governmanet High School","Government Higher Secondary School", "Kendriya Vidyalaya (KV)", "Jawahar Navodaya Vidyalaya", "DAV School", "Other"];
   const universities = ["Anna University", "VIT", "Annamalai","Karunya","Loyolo","Presidency","PSG","SRM","CIT","Vel Tech","IIT","Bharathidasan","Sathyabama", "SASTRA","Thiruvallluvar", "Other"];
-  const colleges = ["Vellore Instuite of Technology","Loyolo Instuite of Technology","Sathyabama Instuite of Science and Technology","Coimbatore Instuite of Technology","Barathidasan arts and science","Indian Instuite Of Technology","Chennai Instuite of Technology","Vel Tech engineering college","SRM Instuite of Technology","karunya Instuite of Technology","Presidency college", "Presidency College", "PSG College of Technology", "Other"];
+  const colleges = ["Vellore Instuite of Technology","Loyolo Instuite of Technology","Sathyabama Instuite of Science and Technology","Coimbatore Instuite of Technology","Barathidasan arts and science","Indian Instuite Of Technology","Chennai Instuite of Technology","Vel Tech engineering college","SRM Instuite of Technology","karunya Instuite of Technology","Presidency college", "PSG College of Technology", "Other"];
   const departments = ["CSE", "IT", "ECE", "EEE", "Mechanical", "Civil", "IOT","AI&ML","Hotel Management","AI","Other"];
 
   // Move to next input on Enter
