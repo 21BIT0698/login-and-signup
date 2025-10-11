@@ -44,12 +44,12 @@ export default function CreateProfile() {
   const [errors, setErrors] = useState({});
 
   const countries = ["India", "USA", "UK", "Canada", "Australia", "Germany", "France", "Italy", "Japan", "China", "Brazil", "Mexico", "South Africa", "Russia", "Spain", "Sweden", "Norway", "Switzerland", "Netherlands", "New Zealand", "Other"];
-  const states = ["Tamil Nadu", "Kerala", "Karnataka", "Maharashtra", "Other"];
-  const districts = ["Chennai", "Coimbatore", "Madurai", "Vellore", "Tirunelveli", "Salem", "Erode", "Other"];
-  const schools = ["Government HSS", "Kendriya Vidyalaya (KV)", "Jawahar Navodaya Vidyalaya", "DAV School", "Other"];
-  const universities = ["Anna University", "VIT Vellore", "SRM Institute", "SASTRA University", "Other"];
-  const colleges = ["Loyola College", "Presidency College", "PSG College of Technology", "Other"];
-  const departments = ["CSE", "IT", "ECE", "EEE", "Mechanical", "Civil", "Other"];
+  const states = ["Tamil Nadu", "Kerala", "Karnataka", "Odisha","Gujarat","Haryana","Delhi","Manipur","Maharashtra", "Other"];
+  const districts = ["Chennai", "Coimbatore", "Madurai", "Vellore","tiruvannamalai","kanjipuram","tirunelveli","chengalpattu", "Tirunelveli","karur","sivagangai", "Salem","coimbatore", "Erode", "Other"];
+  const schools = ["Governmanet High School","Government Higher Secondary School", "Kendriya Vidyalaya (KV)", "Jawahar Navodaya Vidyalaya", "DAV School", "Other"];
+  const universities = ["Anna University", "VIT", "Annamalai","Karunya","Loyolo","Presidency","PSG","SRM","CIT","Vel Tech","IIT","Bharathidasan","Sathyabama", "SASTRA","Thiruvallluvar", "Other"];
+  const colleges = ["Vellore Instuite of Technology","Loyolo Instuite of Technology","Sathyabama Instuite of Science and Technology","Coimbatore Instuite of Technology","Barathidasan arts and science","Indian Instuite Of Technology","Chennai Instuite of Technology","Vel Tech engineering college","SRM Instuite of Technology","karunya Instuite of Technology","Presidency college", "Presidency College", "PSG College of Technology", "Other"];
+  const departments = ["CSE", "IT", "ECE", "EEE", "Mechanical", "Civil", "IOT","AI&ML","Hotel Management","AI","Other"];
 
   // Move to next input on Enter
   const handleEnterNext = (e) => {
