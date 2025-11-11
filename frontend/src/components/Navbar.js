@@ -4,31 +4,23 @@ import { useNavigate, useLocation } from "react-router-dom";
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem("token"));
   const [role, setRole] = useState(localStorage.getItem("role"));
 
   useEffect(() => {
-    const handleStorageChange = () => {
+    const update = () => {
       setLoggedIn(!!localStorage.getItem("token"));
       setRole(localStorage.getItem("role"));
-
-      if (!localStorage.getItem("token")) {
-        navigate("/login", { replace: true });
-      }
     };
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, [navigate]);
+
+    window.addEventListener("login-update", update);
+    return () => window.removeEventListener("login-update", update);
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-
-    setLoggedIn(false);
-    setRole(null);
-
-    // ✅ Direct force redirect (no delay)
-    window.location.href = "/login";
+    localStorage.clear();
+    navigate("/login", { replace: true });
   };
 
   const hideButtons = location.pathname === "/login" || location.pathname === "/signup";
@@ -36,15 +28,19 @@ export default function Navbar() {
   return (
     <nav style={styles.navbar}>
       <div style={styles.logo}>🌍 MERN App</div>
+
       <div style={styles.links}>
-        {!hideButtons && loggedIn && role === "student" && (
-          <button style={styles.btn} onClick={handleLogout}>Logout</button>
-        )}
-        {!hideButtons && loggedIn && role === "admin" && (
+        {/* ✅ Show Login, Signup ONLY when not logged in */}
+        {!loggedIn && !hideButtons && (
           <>
-            
-            <button style={styles.btn} onClick={handleLogout}>Logout</button>
+            <button style={styles.btn} onClick={() => navigate("/login")}>Login</button>
+            <button style={styles.btn} onClick={() => navigate("/signup")}>Signup</button>
           </>
+        )}
+
+        {/* ✅ Show Logout ONLY when logged in */}
+        {loggedIn && (
+          <button style={styles.btn} onClick={handleLogout}>Logout</button>
         )}
       </div>
     </nav>
@@ -58,7 +54,7 @@ const styles = {
     alignItems: "center",
     padding: 12,
     background: "linear-gradient(to right,#6a11cb,#2575fc)",
-    color: "white"
+    color: "white",
   },
   logo: { fontWeight: "bold", fontSize: 22 },
   links: { display: "flex", gap: 10 },
@@ -69,6 +65,6 @@ const styles = {
     cursor: "pointer",
     fontWeight: "500",
     background: "orange",
-    color: "white"
-  }
+    color: "white",
+  },
 };
