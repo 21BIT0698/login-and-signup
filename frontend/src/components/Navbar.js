@@ -4,7 +4,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
-
   const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem("token"));
   const [role, setRole] = useState(localStorage.getItem("role"));
 
@@ -24,32 +23,28 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
+
     setLoggedIn(false);
     setRole(null);
 
+    // ✅ Direct force redirect (no delay)
     window.location.href = "/login";
   };
 
-  const hideNav = location.pathname === "/login" || location.pathname === "/signup";
+  const hideButtons = location.pathname === "/login" || location.pathname === "/signup";
 
   return (
     <nav style={styles.navbar}>
       <div style={styles.logo}>🌍 MERN App</div>
-
       <div style={styles.links}>
-        {!hideNav && !loggedIn && (
-          <>
-            <button style={styles.btn} onClick={() => navigate("/login")}>
-              Login
-            </button>
-            <button style={styles.btn} onClick={() => navigate("/signup")}>
-              Signup
-            </button>
-          </>
-        )}
-
-        {!hideNav && loggedIn && (
+        {!hideButtons && loggedIn && role === "student" && (
           <button style={styles.btn} onClick={handleLogout}>Logout</button>
+        )}
+        {!hideButtons && loggedIn && role === "admin" && (
+          <>
+            
+            <button style={styles.btn} onClick={handleLogout}>Logout</button>
+          </>
         )}
       </div>
     </nav>
@@ -63,7 +58,7 @@ const styles = {
     alignItems: "center",
     padding: 12,
     background: "linear-gradient(to right,#6a11cb,#2575fc)",
-    color: "white",
+    color: "white"
   },
   logo: { fontWeight: "bold", fontSize: 22 },
   links: { display: "flex", gap: 10 },
@@ -74,6 +69,6 @@ const styles = {
     cursor: "pointer",
     fontWeight: "500",
     background: "orange",
-    color: "white",
-  },
+    color: "white"
+  }
 };
