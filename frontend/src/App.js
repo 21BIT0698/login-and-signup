@@ -5,21 +5,25 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Studentcreateprofile from "./components/Studentcreateprofile";
-
 import Studentviewprofile from "./components/Studentviewprofile";
 import Adminstudent from "./components/Adminstudent";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
-  const [role, setRole] = useState(localStorage.getItem("role"));
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userRole = localStorage.getItem("role");
+
+    setIsLoggedIn(!!token);
+    setRole(userRole);
+
     const updateLogin = () => {
       setIsLoggedIn(!!localStorage.getItem("token"));
       setRole(localStorage.getItem("role"));
     };
 
-    // ✅ Custom event
     window.addEventListener("login-update", updateLogin);
 
     return () => window.removeEventListener("login-update", updateLogin);
@@ -32,11 +36,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Signup />} />
 
-        {/* PUBLIC ROUTES */}
-        <Route path="/signup" element={isLoggedIn ? <Navigate to="/dashboard" /> : <Signup />} />
-        <Route path="/login" element={isLoggedIn ? <Navigate to="/dashboard" /> : <Login />} />
+        <Route path="/signup" element={!isLoggedIn ? <Signup /> : <Navigate to="/dashboard" />} />
+        <Route path="/login" element={!isLoggedIn ? <Login /> : <Navigate to="/dashboard" />} />
 
-        {/* PROTECTED ROUTES */}
         <Route path="/dashboard" element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />} />
 
         <Route
