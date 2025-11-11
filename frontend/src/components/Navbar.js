@@ -9,37 +9,46 @@ export default function Navbar() {
   const [role, setRole] = useState(localStorage.getItem("role"));
 
   useEffect(() => {
-    const update = () => {
+    const handleStorageChange = () => {
       setLoggedIn(!!localStorage.getItem("token"));
       setRole(localStorage.getItem("role"));
-    };
 
-    window.addEventListener("login-update", update);
-    return () => window.removeEventListener("login-update", update);
-  }, []);
+      if (!localStorage.getItem("token")) {
+        navigate("/login", { replace: true });
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.clear();
-    navigate("/login", { replace: true });
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    setLoggedIn(false);
+    setRole(null);
+
+    window.location.href = "/login";
   };
 
-  const hideButtons = location.pathname === "/login" || location.pathname === "/signup";
+  const hideNav = location.pathname === "/login" || location.pathname === "/signup";
 
   return (
     <nav style={styles.navbar}>
       <div style={styles.logo}>🌍 MERN App</div>
 
       <div style={styles.links}>
-        {/* ✅ Show Login, Signup ONLY when not logged in */}
-        {!loggedIn && !hideButtons && (
+        {!hideNav && !loggedIn && (
           <>
-            <button style={styles.btn} onClick={() => navigate("/login")}>Login</button>
-            <button style={styles.btn} onClick={() => navigate("/signup")}>Signup</button>
+            <button style={styles.btn} onClick={() => navigate("/login")}>
+              Login
+            </button>
+            <button style={styles.btn} onClick={() => navigate("/signup")}>
+              Signup
+            </button>
           </>
         )}
 
-        {/* ✅ Show Logout ONLY when logged in */}
-        {loggedIn && (
+        {!hideNav && loggedIn && (
           <button style={styles.btn} onClick={handleLogout}>Logout</button>
         )}
       </div>
