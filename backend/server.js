@@ -8,11 +8,7 @@ require("dotenv").config();
 const app = express();   // ✅ You removed this earlier (BIG MISTAKE)
 
 // ✅ Correct CORS setup
-app.use(cors({
-  origin: ["https://login-and-signup-client1.onrender.com"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
+app.use(cors());
 
 app.use(express.json());
 

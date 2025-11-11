@@ -36,9 +36,13 @@ function App() {
       <Routes>
         <Route path="/" element={<Signup />} />
 
-        <Route path="/signup" element={!isLoggedIn ? <Signup /> : <Navigate to="/dashboard" />} />
-        <Route path="/login" element={!isLoggedIn ? <Login /> : <Navigate to="/dashboard" />} />
+        {/* ✅ Signup page allowed always */}
+        <Route path="/signup" element={<Signup />} />
 
+        {/* ✅ FIXED — Login page should ALWAYS open */}
+        <Route path="/login" element={<Login />} />
+
+        {/* ✅ Protected routes */}
         <Route path="/dashboard" element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />} />
 
         <Route
