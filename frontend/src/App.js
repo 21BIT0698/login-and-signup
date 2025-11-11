@@ -9,23 +9,17 @@ import Studentviewprofile from "./components/Studentviewprofile";
 import Adminstudent from "./components/Adminstudent";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState(null);
+  // ✅ FIX: Read login & role immediately on first render
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const [role, setRole] = useState(localStorage.getItem("role"));
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userRole = localStorage.getItem("role");
-
-    setIsLoggedIn(!!token);
-    setRole(userRole);
-
     const updateLogin = () => {
       setIsLoggedIn(!!localStorage.getItem("token"));
       setRole(localStorage.getItem("role"));
     };
 
     window.addEventListener("login-update", updateLogin);
-
     return () => window.removeEventListener("login-update", updateLogin);
   }, []);
 
@@ -35,14 +29,10 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Signup />} />
-
-        {/* ✅ Signup page allowed always */}
         <Route path="/signup" element={<Signup />} />
-
-        {/* ✅ FIXED — Login page should ALWAYS open */}
         <Route path="/login" element={<Login />} />
 
-        {/* ✅ Protected routes */}
+        {/* ✅ Protected */}
         <Route path="/dashboard" element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />} />
 
         <Route
