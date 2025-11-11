@@ -5,8 +5,9 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Studentcreateprofile from "./components/Studentcreateprofile";
+
 import Studentviewprofile from "./components/Studentviewprofile";
-import Adminstudents from "./components/Adminstudent";
+import Adminstudent from "./components/Adminstudent";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
@@ -50,7 +51,7 @@ function App() {
 
         <Route
           path="/admin/students"
-          element={isLoggedIn && role === "admin" ? <Adminstudents /> : <Navigate to="/login" />}
+          element={isLoggedIn && role === "admin" ? <Adminstudent /> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>
