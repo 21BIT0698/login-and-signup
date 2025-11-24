@@ -474,20 +474,23 @@ export default function AdminStudents() {
                 <td style={styles.td}>{student.education.ug.activeBacklogs}</td>
 
                 <td style={styles.td}>
-                  <button
-                    style={btnEdit}
-                    onClick={() => setEditData(student)}
-                  >
-                    Edit
-                  </button>
+  <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+    <button
+      style={btnEdit}
+      onClick={() => setEditData(student)}
+    >
+      Edit
+    </button>
 
-                  <button
-                    style={btnDelete}
-                    onClick={() => deleteStudent(student._id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+    <button
+      style={btnDelete}
+      onClick={() => deleteStudent(student._id)}
+    >
+      Delete
+    </button>
+  </div>
+</td>
+
               </tr>
             ))}
           </tbody>
