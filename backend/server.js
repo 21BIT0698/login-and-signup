@@ -159,33 +159,42 @@ app.get("/admin/students", auth, async (req, res) => {
 });
 
 // ------------------ Admin: Update Student (FULL PROFILE) ------------------
-app.put("/admin/students/:id", async (req, res) => {
+// ------------------ Admin: Update Student (FULL PROFILE) ------------------
+app.put("/admin/students/:id", auth, async (req, res) => {
+  if (req.role !== "admin")
+    return res.status(403).json({ message: "Only admin can update students" });
+
   try {
     const id = req.params.id;
 
-    const updated = await Profile.findByIdAndUpdate(
+    const updatedRecord = await Profile.findByIdAndUpdate(
       id,
       {
         $set: {
+          // Personal
           "personal.name": req.body.personal?.name,
           "personal.email": req.body.personal?.email,
           "personal.phone": req.body.personal?.phone,
           "personal.gender": req.body.personal?.gender,
           "personal.dateOfBirth": req.body.personal?.dateOfBirth,
 
+          // Address
           "address.country": req.body.address?.country,
           "address.state": req.body.address?.state,
           "address.district": req.body.address?.district,
           "address.line": req.body.address?.line,
 
+          // 10th
           "education.tenth.school": req.body.education?.tenth?.school,
-          "education.tenth.percentage": req.body.education?.tenth?.percentage,
           "education.tenth.place": req.body.education?.tenth?.place,
+          "education.tenth.percentage": req.body.education?.tenth?.percentage,
 
+          // 12th
           "education.twelfth.school": req.body.education?.twelfth?.school,
-          "education.twelfth.percentage": req.body.education?.twelfth?.percentage,
           "education.twelfth.place": req.body.education?.twelfth?.place,
+          "education.twelfth.percentage": req.body.education?.twelfth?.percentage,
 
+          // UG
           "education.ug.university": req.body.education?.ug?.university,
           "education.ug.college": req.body.education?.ug?.college,
           "education.ug.department": req.body.education?.ug?.department,
@@ -193,16 +202,19 @@ app.put("/admin/students/:id", async (req, res) => {
           "education.ug.graduationYear": req.body.education?.ug?.graduationYear,
           "education.ug.place": req.body.education?.ug?.place,
           "education.ug.activeBacklogs": req.body.education?.ug?.activeBacklogs,
-        },
+        }
       },
       { new: true }
     );
 
-    res.json(updated);
+    res.status(200).json(updatedRecord);
+
   } catch (err) {
-    res.status(500).json({ message: "Update Failed" });
+    console.log(err);
+    res.status(500).json({ message: "Update failed", error: err.message });
   }
 });
+
 
 // ------------------ Admin: Delete Student ------------------
 app.delete("/admin/students/:id", auth, async (req, res) => {
