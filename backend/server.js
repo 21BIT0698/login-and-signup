@@ -163,7 +163,7 @@ app.put("/admin/students/:id", async (req, res) => {
   try {
     const id = req.params.id;
 
-    const updated = await Student.findByIdAndUpdate(
+    const updated = await Profile.findByIdAndUpdate(
       id,
       {
         $set: {
