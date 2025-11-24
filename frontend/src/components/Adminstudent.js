@@ -5,9 +5,7 @@ export default function AdminStudents() {
   const [students, setStudents] = useState([]);
   const [editData, setEditData] = useState(null);
 
-  // ---------------------------------------------------------
-  // Fetch Students
-  // ---------------------------------------------------------
+  // Fetch students
   useEffect(() => {
     const fetchStudents = async () => {
       try {
@@ -23,54 +21,7 @@ export default function AdminStudents() {
     fetchStudents();
   }, []);
 
-  // ---------------------------------------------------------
-  // Prepare Data For Edit (Fix undefined errors)
-  // ---------------------------------------------------------
-  const openEdit = (stu) => {
-    setEditData({
-      ...stu,
-      personal: {
-        name: stu.personal?.name || "",
-        email: stu.personal?.email || "",
-        phone: stu.personal?.phone || "",
-        gender: stu.personal?.gender || "",
-        dateOfBirth: stu.personal?.dateOfBirth || "",
-      },
-
-      address: {
-        country: stu.address?.country || "",
-        state: stu.address?.state || "",
-        district: stu.address?.district || "",
-        line: stu.address?.line || "",
-      },
-
-      education: {
-        tenth: {
-          school: stu.education?.tenth?.school || "",
-          place: stu.education?.tenth?.place || "",
-          percentage: stu.education?.tenth?.percentage || "",
-        },
-        twelfth: {
-          school: stu.education?.twelfth?.school || "",
-          place: stu.education?.twelfth?.place || "",
-          percentage: stu.education?.twelfth?.percentage || "",
-        },
-        ug: {
-          university: stu.education?.ug?.university || "",
-          college: stu.education?.ug?.college || "",
-          department: stu.education?.ug?.department || "",
-          cgpa: stu.education?.ug?.cgpa || "",
-          graduationYear: stu.education?.ug?.graduationYear || "",
-          place: stu.education?.ug?.place || "",
-          activeBacklogs: stu.education?.ug?.activeBacklogs || "No",
-        },
-      },
-    });
-  };
-
-  // ---------------------------------------------------------
-  // DELETE
-  // ---------------------------------------------------------
+  // Handle Delete
   const deleteStudent = async (id) => {
     if (!window.confirm("Are you sure to delete this student?")) return;
 
@@ -87,24 +38,23 @@ export default function AdminStudents() {
     }
   };
 
-  // ---------------------------------------------------------
-  // UPDATE SUBMIT
-  // ---------------------------------------------------------
+  // Handle Edit Form Submit
   const updateStudent = async (e) => {
     e.preventDefault();
 
     try {
       const token = localStorage.getItem("token");
-
       await axios.put(
         `${process.env.REACT_APP_API_URL}/admin/students/${editData._id}`,
         editData,
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       alert("Updated successfully!");
 
-      // Update UI list
+      // update in UI
       setStudents(students.map((s) => (s._id === editData._id ? editData : s)));
 
       setEditData(null);
@@ -113,21 +63,17 @@ export default function AdminStudents() {
     }
   };
 
-  if (!students.length)
-    return <p style={{ textAlign: "center", marginTop: 40 }}>Loading...</p>;
+  if (!students.length) return <p style={{ textAlign: "center", marginTop: 50 }}>Loading...</p>;
 
-  // ---------------------------------------------------------
-  // UI
-  // ---------------------------------------------------------
   return (
     <div style={{ padding: 20 }}>
       <h2 style={{ color: "green" }}>All Students</h2>
 
-      {/* EDIT POPUP */}
+      {/* Edit Popup */}
       {editData && (
         <div style={popupStyle}>
           <form onSubmit={updateStudent} style={formStyle}>
-            <h3>Edit Student Details</h3>
+            <h3>Edit Student</h3>
 
             {/* PERSONAL */}
             <input
@@ -140,7 +86,6 @@ export default function AdminStudents() {
               }
               placeholder="Name"
             />
-
             <input
               value={editData.personal.email}
               onChange={(e) =>
@@ -151,7 +96,6 @@ export default function AdminStudents() {
               }
               placeholder="Email"
             />
-
             <input
               value={editData.personal.phone}
               onChange={(e) =>
@@ -186,35 +130,6 @@ export default function AdminStudents() {
               placeholder="State"
             />
 
-            {/* EDUCATION → UG */}
-            <input
-              value={editData.education.ug.college}
-              onChange={(e) =>
-                setEditData({
-                  ...editData,
-                  education: {
-                    ...editData.education,
-                    ug: { ...editData.education.ug, college: e.target.value },
-                  },
-                })
-              }
-              placeholder="UG College"
-            />
-
-            <input
-              value={editData.education.ug.department}
-              onChange={(e) =>
-                setEditData({
-                  ...editData,
-                  education: {
-                    ...editData.education,
-                    ug: { ...editData.education.ug, department: e.target.value },
-                  },
-                })
-              }
-              placeholder="Department"
-            />
-
             <button type="submit" style={btnStyle}>
               Save
             </button>
@@ -225,7 +140,7 @@ export default function AdminStudents() {
         </div>
       )}
 
-      {/* TABLE */}
+      {/* Table */}
       <table style={tableStyle}>
         <thead>
           <tr>
@@ -250,7 +165,7 @@ export default function AdminStudents() {
               <td>{stu.education?.ug?.college}</td>
 
               <td>
-                <button onClick={() => openEdit(stu)} style={actionBtn}>
+                <button onClick={() => setEditData(stu)} style={actionBtn}>
                   Edit
                 </button>
 
@@ -266,28 +181,14 @@ export default function AdminStudents() {
   );
 }
 
-// ---------------------------------------------------------
 // Styles
-// ---------------------------------------------------------
 const tableStyle = {
   width: "100%",
   borderCollapse: "collapse",
   marginTop: 20,
 };
-
-const actionBtn = {
-  padding: "5px 10px",
-  background: "blue",
-  color: "#fff",
-  marginRight: 5,
-};
-
-const deleteBtn = {
-  padding: "5px 10px",
-  background: "red",
-  color: "#fff",
-};
-
+const actionBtn = { padding: "5px 10px", background: "blue", color: "#fff", marginRight: 5 };
+const deleteBtn = { padding: "5px 10px", background: "red", color: "#fff" };
 const popupStyle = {
   position: "fixed",
   top: 0,
@@ -299,7 +200,6 @@ const popupStyle = {
   justifyContent: "center",
   alignItems: "center",
 };
-
 const formStyle = {
   background: "#fff",
   padding: 20,
@@ -308,7 +208,6 @@ const formStyle = {
   gap: 10,
   width: "350px",
 };
-
 const btnStyle = {
   padding: 10,
   background: "green",
