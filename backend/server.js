@@ -159,26 +159,48 @@ app.get("/admin/students", auth, async (req, res) => {
 });
 
 // ------------------ Admin: Update Student (FULL PROFILE) ------------------
-app.put("/admin/students/:id", auth, async (req, res) => {
-  if (req.role !== "admin")
-    return res.status(403).json({ message: "Only admin can update students" });
-
+app.put("/admin/students/:id", async (req, res) => {
   try {
-    const updated = await Profile.findByIdAndUpdate(
-      req.params.id,
-      req.body,
+    const id = req.params.id;
+
+    const updated = await Student.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          "personal.name": req.body.personal?.name,
+          "personal.email": req.body.personal?.email,
+          "personal.phone": req.body.personal?.phone,
+          "personal.gender": req.body.personal?.gender,
+          "personal.dateOfBirth": req.body.personal?.dateOfBirth,
+
+          "address.country": req.body.address?.country,
+          "address.state": req.body.address?.state,
+          "address.district": req.body.address?.district,
+          "address.line": req.body.address?.line,
+
+          "education.tenth.school": req.body.education?.tenth?.school,
+          "education.tenth.percentage": req.body.education?.tenth?.percentage,
+          "education.tenth.place": req.body.education?.tenth?.place,
+
+          "education.twelfth.school": req.body.education?.twelfth?.school,
+          "education.twelfth.percentage": req.body.education?.twelfth?.percentage,
+          "education.twelfth.place": req.body.education?.twelfth?.place,
+
+          "education.ug.university": req.body.education?.ug?.university,
+          "education.ug.college": req.body.education?.ug?.college,
+          "education.ug.department": req.body.education?.ug?.department,
+          "education.ug.cgpa": req.body.education?.ug?.cgpa,
+          "education.ug.graduationYear": req.body.education?.ug?.graduationYear,
+          "education.ug.place": req.body.education?.ug?.place,
+          "education.ug.activeBacklogs": req.body.education?.ug?.activeBacklogs,
+        },
+      },
       { new: true }
     );
 
-    if (!updated)
-      return res.status(404).json({ message: "Student not found" });
-
-    res.json({
-      message: "Student updated successfully!",
-      student: updated
-    });
+    res.json(updated);
   } catch (err) {
-    res.status(400).json({ message: "Update failed", error: err.message });
+    res.status(500).json({ message: "Update Failed" });
   }
 });
 
