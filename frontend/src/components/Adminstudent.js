@@ -422,7 +422,7 @@ export default function AdminStudents() {
               <th style={styles.th}>Email</th>
               <th style={styles.th}>Phone</th>
               <th style={styles.th}>Gender</th>
-              <th style={styles.th}>DOB</th>
+              <th style={styles.th}>Date Of Birth</th>
               <th style={styles.th}>Country</th>
               <th style={styles.th}>State</th>
               <th style={styles.th}>District</th>
