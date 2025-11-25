@@ -161,11 +161,11 @@ export default function CreateProfile() {
             <option value="Female">Female</option>
             <option value="Other">Other</option>
           </select>
-          <input
-  type="date"
-  value={personal.dob}
-  onChange={(e) => setPersonal({ ...personal, dob: e.target.value })}
-  style={getInputStyle("dob")}
+<input 
+  type="date" 
+  value={personal.dob} 
+  onChange={(e) => setPersonal({ ...personal, dob: e.target.value })} 
+  style={getInputStyle("dob")} 
 />
 
           {/* Address */}
