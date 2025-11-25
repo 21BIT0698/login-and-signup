@@ -161,7 +161,12 @@ export default function CreateProfile() {
             <option value="Female">Female</option>
             <option value="Other">Other</option>
           </select>
-          <input type="text" placeholder="DD-MM-YYYY" value={personal.dob} onChange={(e) => setPersonal({ ...personal, dob: e.target.value })} style={getInputStyle("dob")} onKeyDown={handleEnterNext} />
+          <input
+  type="date"
+  value={personal.dob}
+  onChange={(e) => setPersonal({ ...personal, dob: e.target.value })}
+  style={getInputStyle("dob")}
+/>
 
           {/* Address */}
           <h4 style={styles.sectionHeading}>Address</h4>
