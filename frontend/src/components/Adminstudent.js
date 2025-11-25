@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function AdminStudents() {
   const [students, setStudents] = useState([]);
@@ -17,33 +18,43 @@ export default function AdminStudents() {
         );
         setStudents(res.data);
       } catch (err) {
-        alert(err.response?.data?.message || "Error fetching students");
+        Swal.fire("Error!", "Error fetching students", "error");
       }
     };
     fetchStudents();
   }, []);
 
-  // DELETE STUDENT
+  // ======================= DELETE STUDENT ============================
   const deleteStudent = async (id) => {
-    if (!window.confirm("Are you sure to delete?")) return;
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text: "This student will be deleted permanently!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, Delete!",
+    });
+
+    if (!confirm.isConfirmed) return;
 
     try {
       const token = localStorage.getItem("token");
+
       await axios.delete(
         `${process.env.REACT_APP_API_URL}/admin/students/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setStudents(students.filter((s) => s._id !== id));
-      alert("Deleted successfully!");
+
+      Swal.fire("Deleted!", "Student removed successfully.", "success");
     } catch (err) {
-      alert("Delete failed");
+      Swal.fire("Failed!", "Unable to delete student.", "error");
     }
   };
 
-  // UPDATE STUDENT
+  // ======================= UPDATE STUDENT ============================
   const updateStudent = async (e) => {
     e.preventDefault();
     try {
@@ -55,7 +66,7 @@ export default function AdminStudents() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      alert("Student updated successfully!");
+      Swal.fire("Updated!", "Student details updated successfully!", "success");
 
       setStudents(
         students.map((s) => (s._id === editData._id ? editData : s))
@@ -63,12 +74,14 @@ export default function AdminStudents() {
 
       setEditData(null);
     } catch (err) {
-      alert("Update failed");
+      Swal.fire("Update Failed!", "Could not update student.", "error");
     }
   };
 
   if (!students.length)
-    return <p style={{ textAlign: "center", marginTop: 50 }}>Loading students...</p>;
+    return (
+      <p style={{ textAlign: "center", marginTop: 50 }}>Loading students...</p>
+    );
 
   return (
     <div style={styles.container}>
@@ -474,22 +487,22 @@ export default function AdminStudents() {
                 <td style={styles.td}>{student.education.ug.activeBacklogs}</td>
 
                 <td style={styles.td}>
-  <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
-    <button
-      style={btnEdit}
-      onClick={() => setEditData(student)}
-    >
-      Edit
-    </button>
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <button
+                      style={btnEdit}
+                      onClick={() => setEditData(student)}
+                    >
+                      Edit
+                    </button>
 
-    <button
-      style={btnDelete}
-      onClick={() => deleteStudent(student._id)}
-    >
-      Delete
-    </button>
-  </div>
-</td>
+                    <button
+                      style={btnDelete}
+                      onClick={() => deleteStudent(student._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
 
               </tr>
             ))}
@@ -531,7 +544,7 @@ const popupForm = {
   overflowY: "auto",
 };
 
-const btnEdit = { background: "blue", color: "#fff", padding: "5px 10px", marginRight: 5, border: "none" };
+const btnEdit = { background: "blue", color: "#fff", padding: "5px 10px", border: "none" };
 const btnDelete = { background: "red", color: "#fff", padding: "5px 10px", border: "none" };
 const btnSave = { background: "green", color: "#fff", padding: 10, border: "none" };
 const btnCancel = { background: "gray", color: "#fff", padding: 10, border: "none" };
