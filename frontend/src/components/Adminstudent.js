@@ -2,6 +2,16 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 
+// ===================== DATE FORMAT FUNCTION =====================
+function formatDOB(dob) {
+  if (!dob) return "";
+  const date = new Date(dob);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`; // Output = 1-2-2003 format
+}
+
 export default function AdminStudents() {
   const [students, setStudents] = useState([]);
   const [editData, setEditData] = useState(null);
@@ -139,6 +149,7 @@ export default function AdminStudents() {
               placeholder="Gender"
             />
 
+            {/* DOB INPUT (NO FORMAT) */}
             <input
               value={editData.personal.dateOfBirth}
               onChange={(e) =>
@@ -155,7 +166,6 @@ export default function AdminStudents() {
 
             {/* ADDRESS */}
             <h3>Address Details</h3>
-
             <input
               value={editData.address.country}
               onChange={(e) =>
@@ -243,7 +253,10 @@ export default function AdminStudents() {
                   ...editData,
                   education: {
                     ...editData.education,
-                    tenth: { ...editData.education.tenth, place: e.target.value },
+                    tenth: {
+                      ...editData.education.tenth,
+                      place: e.target.value,
+                    },
                   },
                 })
               }
@@ -467,7 +480,10 @@ export default function AdminStudents() {
                 <td style={styles.td}>{student.personal?.email}</td>
                 <td style={styles.td}>{student.personal?.phone}</td>
                 <td style={styles.td}>{student.personal?.gender}</td>
-                <td style={styles.td}>{student.personal?.dateOfBirth}</td>
+
+                {/* ------------------ DOB FIXED FORMAT ------------------ */}
+                <td style={styles.td}>{formatDOB(student.personal?.dateOfBirth)}</td>
+
                 <td style={styles.td}>{student.address?.country}</td>
                 <td style={styles.td}>{student.address?.state}</td>
                 <td style={styles.td}>{student.address?.district}</td>

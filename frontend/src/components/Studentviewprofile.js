@@ -5,6 +5,16 @@ import Swal from "sweetalert2";
 export default function ViewProfile() {
   const [profile, setProfile] = useState(null);
 
+  // ⭐ FORMAT DOB (DD-MM-YYYY)
+  const formatDOB = (dob) => {
+    if (!dob) return "N/A";
+    const d = new Date(dob);
+    const day = d.getDate();
+    const month = d.getMonth() + 1; 
+    const year = d.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -25,7 +35,8 @@ export default function ViewProfile() {
     fetchProfile();
   }, []);
 
-  if (!profile) return <p style={{ textAlign: "center", marginTop: 50 }}>Loading...</p>;
+  if (!profile)
+    return <p style={{ textAlign: "center", marginTop: 50 }}>Loading...</p>;
 
   return (
     <div style={styles.container}>
@@ -39,7 +50,12 @@ export default function ViewProfile() {
           <tr><th style={styles.th}>Email</th><td style={styles.td}>{profile.personal?.email || "N/A"}</td></tr>
           <tr><th style={styles.th}>Phone</th><td style={styles.td}>{profile.personal?.phone || "N/A"}</td></tr>
           <tr><th style={styles.th}>Gender</th><td style={styles.td}>{profile.personal?.gender || "N/A"}</td></tr>
-          <tr><th style={styles.th}>Date of Birth</th><td style={styles.td}>{profile.personal?.dateOfBirth || "N/A"}</td></tr>
+
+          {/* ⭐ UPDATED DOB FORMAT HERE */}
+          <tr>
+            <th style={styles.th}>Date of Birth</th>
+            <td style={styles.td}>{formatDOB(profile.personal?.dateOfBirth)}</td>
+          </tr>
         </tbody>
       </table>
 
