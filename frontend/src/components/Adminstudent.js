@@ -6,8 +6,14 @@ import Swal from "sweetalert2";
 const formatDOB = (dob) => {
   if (!dob) return "N/A";
 
-  const parts = dob.split("-"); // ["2003", "02", "01"]
-  return `${parseInt(parts[2])}-${parseInt(parts[1])}-${parts[0]}`;
+  // Example dob => "2003-02-01"
+  const parts = dob.split("-"); // ["2003","02","01"]
+
+  const year = parts[0];
+  const month = parts[1];
+  const day = parts[2];
+
+  return `${day}-${month}-${year}`;
 };
 
 export default function AdminStudents() {
@@ -147,23 +153,294 @@ export default function AdminStudents() {
               placeholder="Gender"
             />
 
-            {/* 🆕 DOB INPUT FIXED AS `type="date"` */}
+            {/* DOB INPUT (NO FORMAT) */}
+            <<input
+  type="date"
+  value={(() => {
+    const dob = editData.personal.dateOfBirth;
+    if (!dob.includes("-")) return dob;
+    const parts = dob.split("-");
+    return `${parts[2]}-${parts[1]}-${parts[0]}`; // Convert dd-mm-yyyy -> yyyy-mm-dd
+  })()}
+  onChange={(e) =>
+    setEditData({
+      ...editData,
+      personal: {
+        ...editData.personal,
+        dateOfBirth: e.target.value,
+      },
+    })
+  }
+/>
+
+
+
+            {/* ADDRESS */}
+            <h3>Address Details</h3>
             <input
-              type="date"
-              value={editData.personal.dateOfBirth}
+              value={editData.address.country}
               onChange={(e) =>
                 setEditData({
                   ...editData,
-                  personal: {
-                    ...editData.personal,
-                    dateOfBirth: e.target.value,
+                  address: { ...editData.address, country: e.target.value },
+                })
+              }
+              placeholder="Country"
+            />
+
+            <input
+              value={editData.address.state}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  address: { ...editData.address, state: e.target.value },
+                })
+              }
+              placeholder="State"
+            />
+
+            <input
+              value={editData.address.district}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  address: { ...editData.address, district: e.target.value },
+                })
+              }
+              placeholder="District"
+            />
+
+            <input
+              value={editData.address.line}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  address: { ...editData.address, line: e.target.value },
+                })
+              }
+              placeholder="Address Line"
+            />
+
+            {/* 10th */}
+            <h3>10th Details</h3>
+            <input
+              value={editData.education.tenth.school}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  education: {
+                    ...editData.education,
+                    tenth: {
+                      ...editData.education.tenth,
+                      school: e.target.value,
+                    },
                   },
                 })
               }
+              placeholder="10th School"
             />
 
-            {/* REST SAME.. */}
-            {/* ADDRESS , EDUCATION, UG DETAILS etc... */}
+            <input
+              value={editData.education.tenth.percentage}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  education: {
+                    ...editData.education,
+                    tenth: {
+                      ...editData.education.tenth,
+                      percentage: e.target.value,
+                    },
+                  },
+                })
+              }
+              placeholder="10th Percentage"
+            />
+
+            <input
+              value={editData.education.tenth.place}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  education: {
+                    ...editData.education,
+                    tenth: {
+                      ...editData.education.tenth,
+                      place: e.target.value,
+                    },
+                  },
+                })
+              }
+              placeholder="10th Place"
+            />
+
+            {/* 12th */}
+            <h3>12th Details</h3>
+            <input
+              value={editData.education.twelfth.school}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  education: {
+                    ...editData.education,
+                    twelfth: {
+                      ...editData.education.twelfth,
+                      school: e.target.value,
+                    },
+                  },
+                })
+              }
+              placeholder="12th School"
+            />
+
+            <input
+              value={editData.education.twelfth.percentage}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  education: {
+                    ...editData.education,
+                    twelfth: {
+                      ...editData.education.twelfth,
+                      percentage: e.target.value,
+                    },
+                  },
+                })
+              }
+              placeholder="12th Percentage"
+            />
+
+            <input
+              value={editData.education.twelfth.place}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  education: {
+                    ...editData.education,
+                    twelfth: {
+                      ...editData.education.twelfth,
+                      place: e.target.value,
+                    },
+                  },
+                })
+              }
+              placeholder="12th Place"
+            />
+
+            {/* UG */}
+            <h3>UG Details</h3>
+            <input
+              value={editData.education.ug.university}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  education: {
+                    ...editData.education,
+                    ug: {
+                      ...editData.education.ug,
+                      university: e.target.value,
+                    },
+                  },
+                })
+              }
+              placeholder="UG University"
+            />
+
+            <input
+              value={editData.education.ug.college}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  education: {
+                    ...editData.education,
+                    ug: {
+                      ...editData.education.ug,
+                      college: e.target.value,
+                    },
+                  },
+                })
+              }
+              placeholder="UG College"
+            />
+
+            <input
+              value={editData.education.ug.department}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  education: {
+                    ...editData.education,
+                    ug: {
+                      ...editData.education.ug,
+                      department: e.target.value,
+                    },
+                  },
+                })
+              }
+              placeholder="UG Department"
+            />
+
+            <input
+              value={editData.education.ug.cgpa}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  education: {
+                    ...editData.education,
+                    ug: { ...editData.education.ug, cgpa: e.target.value },
+                  },
+                })
+              }
+              placeholder="UG CGPA"
+            />
+
+            <input
+              value={editData.education.ug.graduationYear}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  education: {
+                    ...editData.education,
+                    ug: {
+                      ...editData.education.ug,
+                      graduationYear: e.target.value,
+                    },
+                  },
+                })
+              }
+              placeholder="UG Graduation Year"
+            />
+
+            <input
+              value={editData.education.ug.place}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  education: {
+                    ...editData.education,
+                    ug: { ...editData.education.ug, place: e.target.value },
+                  },
+                })
+              }
+              placeholder="UG Place"
+            />
+
+            <input
+              value={editData.education.ug.activeBacklogs}
+              onChange={(e) =>
+                setEditData({
+                  ...editData,
+                  education: {
+                    ...editData.education,
+                    ug: {
+                      ...editData.education.ug,
+                      activeBacklogs: e.target.value,
+                    },
+                  },
+                })
+              }
+              placeholder="Active Backlogs"
+            />
 
             <button type="submit" style={btnSave}>Save</button>
             <button type="button" style={btnCancel} onClick={() => setEditData(null)}>
@@ -187,6 +464,19 @@ export default function AdminStudents() {
               <th style={styles.th}>State</th>
               <th style={styles.th}>District</th>
               <th style={styles.th}>Address</th>
+              <th style={styles.th}>10th School</th>
+              <th style={styles.th}>10th %</th>
+              <th style={styles.th}>10th Place</th>
+              <th style={styles.th}>12th School</th>
+              <th style={styles.th}>12th %</th>
+              <th style={styles.th}>12th Place</th>
+              <th style={styles.th}>UG University</th>
+              <th style={styles.th}>UG College</th>
+              <th style={styles.th}>Department</th>
+              <th style={styles.th}>CGPA</th>
+              <th style={styles.th}>Grad Year</th>
+              <th style={styles.th}>Place</th>
+              <th style={styles.th}>Backlogs</th>
               <th style={styles.th}>Actions</th>
             </tr>
           </thead>
@@ -202,28 +492,43 @@ export default function AdminStudents() {
                 <td style={styles.td}>{student.personal?.phone}</td>
                 <td style={styles.td}>{student.personal?.gender}</td>
 
-                {/* DISPLAY FORMATTED DOB */}
+                {/* ------------------ DOB FIXED FORMAT ------------------ */}
                 <td style={styles.td}>{formatDOB(student.personal?.dateOfBirth)}</td>
 
                 <td style={styles.td}>{student.address?.country}</td>
                 <td style={styles.td}>{student.address?.state}</td>
                 <td style={styles.td}>{student.address?.district}</td>
                 <td style={styles.td}>{student.address?.line}</td>
+                <td style={styles.td}>{student.education.tenth.school}</td>
+                <td style={styles.td}>{student.education.tenth.percentage}</td>
+                <td style={styles.td}>{student.education.tenth.place}</td>
+                <td style={styles.td}>{student.education.twelfth.school}</td>
+                <td style={styles.td}>{student.education.twelfth.percentage}</td>
+                <td style={styles.td}>{student.education.twelfth.place}</td>
+                <td style={styles.td}>{student.education.ug.university}</td>
+                <td style={styles.td}>{student.education.ug.college}</td>
+                <td style={styles.td}>{student.education.ug.department}</td>
+                <td style={styles.td}>{student.education.ug.cgpa}</td>
+                <td style={styles.td}>{student.education.ug.graduationYear}</td>
+                <td style={styles.td}>{student.education.ug.place}</td>
+                <td style={styles.td}>{student.education.ug.activeBacklogs}</td>
 
                 <td style={styles.td}>
-                  <button
-                    style={btnEdit}
-                    onClick={() => setEditData(student)}
-                  >
-                    Edit
-                  </button>
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <button
+                      style={btnEdit}
+                      onClick={() => setEditData(student)}
+                    >
+                      Edit
+                    </button>
 
-                  <button
-                    style={btnDelete}
-                    onClick={() => deleteStudent(student._id)}
-                  >
-                    Delete
-                  </button>
+                    <button
+                      style={btnDelete}
+                      onClick={() => deleteStudent(student._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </td>
 
               </tr>
@@ -240,7 +545,7 @@ const styles = {
   heading: { marginBottom: 20, color: "#27ae60", textDecoration: "underline" },
   table: { borderCollapse: "collapse", width: "100%" },
   th: { padding: 10, background: "#2c3e50", color: "#fff", border: "1px solid #ddd" },
-  td: { padding: 10, border: "1px solid #ddd" ,whiteSpace: "nowrap"},
+  td: { padding: 10, border: "1px solid #ddd" , whiteSpace: "nowrap"},
 };
 
 const popup = {
@@ -255,6 +560,8 @@ const popup = {
   alignItems: "center",
   zIndex: 1,
 };
+
+
 
 const popupForm = {
   background: "#fff",
