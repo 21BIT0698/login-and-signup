@@ -24,8 +24,10 @@ export default function AdminStudents() {
         const res = await axios.get(
           `${process.env.REACT_APP_API_URL}/admin/students`,
           { headers: { Authorization: `Bearer ${token}` } }
+    
         );
-        setStudents(res.data);
+        const uniqueStudents = Array.from(new Map(res.data.map(s => [s._id, s])).values());
+      setStudents(uniqueStudents)
       } catch (err) {
         Swal.fire("Error!", "Error fetching students", "error");
       }
