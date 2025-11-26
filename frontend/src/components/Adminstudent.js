@@ -124,6 +124,7 @@ export default function AdminStudents() {
               placeholder="Gender"
             />
             <input
+              type="date"
               value={editData.personal?.dateOfBirth || ""}
               onChange={(e) => setEditData({ ...editData, personal: { ...editData.personal, dateOfBirth: e.target.value } })}
               placeholder="DOB"
@@ -308,7 +309,7 @@ export default function AdminStudents() {
                 <td style={styles.td}>{student.personal?.email}</td>
                 <td style={styles.td}>{student.personal?.phone}</td>
                 <td style={styles.td}>{student.personal?.gender}</td>
-                <td style={styles.td}>{formatDOB(student.personal?.dateOfBirth)}</td>
+                <td style={{ ...styles.td, whiteSpace: "nowrap" }}>{formatDOB(student.personal?.dateOfBirth)}</td>
                 <td style={styles.td}>{student.address?.country}</td>
                 <td style={styles.td}>{student.address?.state}</td>
                 <td style={styles.td}>{student.address?.district}</td>
@@ -328,12 +329,8 @@ export default function AdminStudents() {
                 <td style={styles.td}>{student.education?.ug?.activeBacklogs}</td>
                 <td style={styles.td}>
                   <div style={{ display: "flex", gap: "10px" }}>
-                    <button style={{ background: "blue", color: "#fff", padding: "5px 10px", border: "none" }}
-                      onClick={() => setEditData(JSON.parse(JSON.stringify(student)))}
-                    >Edit</button>
-                    <button style={{ background: "red", color: "#fff", padding: "5px 10px", border: "none" }}
-                      onClick={() => deleteStudent(student._id)}
-                    >Delete</button>
+                    <button style={btnEdit} onClick={() => setEditData(JSON.parse(JSON.stringify(student)))}>Edit</button>
+                    <button style={btnDelete} onClick={() => deleteStudent(student._id)}>Delete</button>
                   </div>
                 </td>
               </tr>
@@ -346,6 +343,9 @@ export default function AdminStudents() {
 }
 
 const styles = {
-  th: { padding: 5, background: "#2c3e50", color: "#fff", border: "1px solid #ddd" },
+  th: { padding: 10, background: "#2c3e50", color: "#fff", border: "1px solid #ddd" },
   td: { padding: 10, border: "1px solid #ddd" },
 };
+
+const btnEdit = { background: "blue", color: "#fff", padding: "5px 10px", border: "none" };
+const btnDelete = { background: "red", color: "#fff", padding: "5px 10px", border: "none" };
