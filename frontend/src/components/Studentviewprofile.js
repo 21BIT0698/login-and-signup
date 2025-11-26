@@ -5,13 +5,16 @@ import Swal from "sweetalert2";
 export default function ViewProfile() {
   const [profile, setProfile] = useState(null);
 
-  // ⭐ FORMAT DOB (DD-MM-YYYY)
+  // ⭐ FORMAT DOB (D-M-YYYY without leading zeros)
   const formatDOB = (dob) => {
     if (!dob) return "N/A";
-    const d = new Date(dob);
-    const day = d.getDate();
-    const month = d.getMonth() + 1; 
-    const year = d.getFullYear();
+
+    const parts = dob.split("-"); // "2003-02-01"
+
+    const year = parts[0];
+    const month = String(parseInt(parts[1])); // Removes leading zero → 02 → 2
+    const day = String(parseInt(parts[2]));   // Removes leading zero → 01 → 1
+
     return `${day}-${month}-${year}`;
   };
 
@@ -22,7 +25,7 @@ export default function ViewProfile() {
         const res = await axios.get(`${process.env.REACT_APP_API_URL}/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log("Fetched Profile:", res.data);
+
         setProfile(res.data);
       } catch (err) {
         Swal.fire({
@@ -51,7 +54,7 @@ export default function ViewProfile() {
           <tr><th style={styles.th}>Phone</th><td style={styles.td}>{profile.personal?.phone || "N/A"}</td></tr>
           <tr><th style={styles.th}>Gender</th><td style={styles.td}>{profile.personal?.gender || "N/A"}</td></tr>
 
-          {/* ⭐ UPDATED DOB FORMAT HERE */}
+          {/* ⭐ DISPLAY DOB */}
           <tr>
             <th style={styles.th}>Date of Birth</th>
             <td style={styles.td}>{formatDOB(profile.personal?.dateOfBirth)}</td>
