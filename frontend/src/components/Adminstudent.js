@@ -182,7 +182,8 @@ export default function AdminStudents() {
               placeholder="Address Line"
             />
 
-            {/* Save / Cancel */}
+            {/* Other education fields (10th, 12th, UG) remain unchanged */}
+
             <button type="submit" style={btnSave}>Save</button>
             <button type="button" style={btnCancel} onClick={() => setEditData(null)}>
               Cancel
@@ -224,7 +225,7 @@ export default function AdminStudents() {
                 <td style={styles.td}>{student.address?.district}</td>
                 <td style={styles.td}>{student.address?.line}</td>
                 <td style={styles.td}>
-                  <div style={{ display: "flex", gap: "5px", justifyContent: "center" }}>
+                  <div style={{ display: "flex", gap: "5px" }}>
                     <button style={btnEdit} onClick={() => setEditData(student)}>Edit</button>
                     <button style={btnDelete} onClick={() => deleteStudent(student._id)}>Delete</button>
                   </div>
@@ -237,7 +238,6 @@ export default function AdminStudents() {
     </div>
   );
 }
-
 const styles = {
   container: { padding: 20 },
   heading: { marginBottom: 20, color: "#27ae60", textDecoration: "underline" },
@@ -246,12 +246,13 @@ const styles = {
   td: {
     padding: 10,
     border: "1px solid #ddd",
-    whiteSpace: "nowrap",
-    maxWidth: 120,
+    whiteSpace: "nowrap",        // ore line-la text
+    maxWidth: 120,               // DOB cell width fix
     overflow: "hidden",
-    textOverflow: "ellipsis",
+    textOverflow: "ellipsis",    // long text ellipsis
   },
 };
+
 
 const popup = {
   position: "fixed",
