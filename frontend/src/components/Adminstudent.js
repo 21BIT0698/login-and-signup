@@ -308,7 +308,10 @@ export default function AdminStudents() {
                 <td style={styles.td}>{student.personal?.email}</td>
                 <td style={styles.td}>{student.personal?.phone}</td>
                 <td style={styles.td}>{student.personal?.gender}</td>
-                <td style={{ ...styles.td, whiteSpace: "nowrap" }}>{formatDOB(student.personal?.dateOfBirth)}</td><td style={styles.td}></td>
+<td style={{ ...styles.td, whiteSpace: "nowrap" }}>
+  {formatDOB(student.personal?.dateOfBirth)}
+</td>
+
                 <td style={styles.td}>{student.address?.country}</td>
                 <td style={styles.td}>{student.address?.state}</td>
                 <td style={styles.td}>{student.address?.district}</td>
