@@ -240,7 +240,7 @@ const styles = {
   heading: { marginBottom: 20, color: "#27ae60", textDecoration: "underline" },
   table: { borderCollapse: "collapse", width: "100%" },
   th: { padding: 10, background: "#2c3e50", color: "#fff", border: "1px solid #ddd" },
-  td: { padding: 10, border: "1px solid #ddd" },
+  td: { padding: 10, border: "1px solid #ddd" ,whiteSpace: "nowrap"},
 };
 
 const popup = {
