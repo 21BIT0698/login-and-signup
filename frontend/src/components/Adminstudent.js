@@ -308,7 +308,7 @@ export default function AdminStudents() {
                 <td style={styles.td}>{student.personal?.email}</td>
                 <td style={styles.td}>{student.personal?.phone}</td>
                 <td style={styles.td}>{student.personal?.gender}</td>
-                <td style={styles.td}>{formatDOB(student.personal?.dateOfBirth)}</td><td style={styles.td}>{formatDOB(student.personal?.dateOfBirth)}</td>
+                <td style={styles.td}>{formatDOB(student.personal?.dateOfBirth)}</td>
                 <td style={styles.td}>{student.address?.country}</td>
                 <td style={styles.td}>{student.address?.state}</td>
                 <td style={styles.td}>{student.address?.district}</td>
@@ -346,6 +346,6 @@ export default function AdminStudents() {
 }
 
 const styles = {
-  th: { padding: 15, background: "#2c3e50", color: "#fff", border: "1px solid #ddd" },
+  th: { padding: 5, background: "#2c3e50", color: "#fff", border: "1px solid #ddd" },
   td: { padding: 10, border: "1px solid #ddd" },
 };
