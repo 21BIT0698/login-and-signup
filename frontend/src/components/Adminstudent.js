@@ -345,7 +345,7 @@ export default function AdminStudents() {
 }
 
 const styles = {
-  th: { padding: 10, background: "#2c3e50", color: "#fff", border: "1px solid #ddd" },
+  th: { padding: 10, background: "#2c3e50", color: "#fff", border: "1px solid #ddd" ,textAlign:"center"},
   td: { padding: 10, border: "1px solid #ddd" },
 };
 
