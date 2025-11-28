@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+// ------------------------ CREATE PROFILE WITH VALIDATION ------------------------ 
+import React, { useState } from "react"; 
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateProfile() {
+  const navigate = useNavigate();
+
   const [personal, setPersonal] = useState({
     name: "",
     email: "",
@@ -11,233 +15,215 @@ export default function CreateProfile() {
     dob: "",
   });
 
-  const [education, setEducation] = useState({
-    hscSchool: "",
-    hscBoard: "",
-    hscMarks: "",
-    hscYop: "",
+  const [address, setAddress] = useState({
+    state: "",
+    otherState: "",
+    district: "",
+    otherDistrict: "",
+    country: "",
+    otherCountry: "",
+    line: "",
+  });
 
-    university: "",
-    college: "",
-    department: "",
-    ugCgpa: "",
-    ugYop: "",
+  const [education, setEducation] = useState({
+    tenth: { school: "", otherSchool: "", place: "", percentage: "" },
+    twelfth: { school: "", otherSchool: "", place: "", percentage: "" },
+    ug: {
+      university: "",
+      otherUniversity: "",
+      college: "",
+      otherCollege: "",
+      department: "",
+      otherDepartment: "",
+      cgpa: "",
+      graduationYear: "",
+      place: "",
+      activeBacklogs: "",
+    },
   });
 
   const [errors, setErrors] = useState({});
 
-  const boards = ["State Board", "CBSE", "ICSE", "Matric", "Other"];
-  const universities = [
-    "Anna University",
-    "VIT",
-    "SRM",
-    "IIT",
-    "Thiruvalluvar",
-    "SASTRA",
-    "Sathyabama",
-    "PSG",
-    "Other",
-  ];
-  const departments = [
-    "CSE",
-    "IT",
-    "ECE",
-    "EEE",
-    "Mechanical",
-    "Civil",
-    "AI & DS",
-    "MBA",
-    "Other",
-  ];
+  const countries = ["India","USA","UK","Canada","Australia","Germany","France","Italy","Japan","China","Brazil","Mexico","South Africa","Russia","Spain","Sweden","Norway","Switzerland","Netherlands","New Zealand","Other"];
+  const states = ["Tamil Nadu","Kerala","Karnataka","Odisha","Gujarat","Haryana","Delhi","Manipur","Maharashtra","Other"];
+  const districts = ["Chennai","Coimbatore","Madurai","Vellore","Tiruvannamalai","Kanchipuram","Tirunelveli","Chengalpattu","Karur","Sivagangai","Salem","Erode","Other"];
+  const schools = ["Government High School","Government Higher Secondary School","Kendriya Vidyalaya (KV)","Jawahar Navodaya Vidyalaya","DAV School","Other"];
+  const universities = ["Anna University","VIT","Annamalai","Karunya","Loyolo","Presidency","PSG","SRM","CIT","Vel Tech","IIT","Bharathidasan","Sathyabama","SASTRA","Thiruvalluvar","Other"];
+  const colleges = ["VIT","Loyolo","Sathyabama","Coimbatore","Bharathidasan","IIT","Chennai","Vel Tech","SRM","Karunya","Presidency","PSG","Other"];
+  const departments = ["CSE","IT","ECE","EEE","Mechanical","Civil","IOT","AI&ML","Hotel Management","AI","Other"];
 
-  // ---------------- VALIDATION ----------------
+  
+  // ------------------------ VALIDATION ------------------------
   const validate = () => {
-    let err = {};
+    let tempErrors = {};
 
-    // Personal
-    if (!personal.name.trim()) err.name = "Name required";
+    if (!personal.name) tempErrors.name = "Required";
 
-    if (!personal.email.trim()) {
-      err.email = "Email required";
-    } else {
+    if (!personal.email) tempErrors.email = "Required";
+    else {
       const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!pattern.test(personal.email)) err.email = "Invalid Email";
+      if (!pattern.test(personal.email)) tempErrors.email = "Invalid email";
     }
 
-    if (!personal.phone.trim()) {
-      err.phone = "Phone required";
-    } else if (!/^[0-9]{10}$/.test(personal.phone)) {
-      err.phone = "Phone must be 10 digits";
-    }
+    if (!personal.phone) tempErrors.phone = "Required";
+    else if (!/^[0-9]{10}$/.test(personal.phone)) tempErrors.phone = "Must be 10 digits";
 
-    if (!personal.gender) err.gender = "Gender required";
-    if (!personal.dob) err.dob = "DOB required";
+    if (!personal.gender) tempErrors.gender = "Required";
+    if (!personal.dob) tempErrors.dob = "Required";
 
-    // HSC Validation
-    if (!education.hscSchool.trim()) err.hscSchool = "Enter school name";
-    if (!education.hscBoard) err.hscBoard = "Select board";
-    if (!education.hscMarks) err.hscMarks = "Enter percentage/marks";
-    if (!education.hscYop) err.hscYop = "Enter passing year";
-
-    // UG Validation
-    if (!education.university) err.university = "Select university";
-    if (!education.college.trim()) err.college = "Enter college";
-    if (!education.department) err.department = "Select department";
-
-    if (!education.ugYop) err.ugYop = "Enter UG passing year";
-
-    if (!education.ugCgpa) {
-      err.ugCgpa = "Enter CGPA";
-    } else if (education.ugCgpa <= 0 || education.ugCgpa > 10) {
-      err.ugCgpa = "CGPA must be between 1–10";
-    }
-
-    setErrors(err);
-    return Object.keys(err).length === 0;
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
   };
 
-  // ---------------- SUBMIT ----------------
-  const handleSubmit = async () => {
+
+  // ------------------------ SUBMIT ------------------------
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!validate()) return;
 
-    try {
-      await axios.post("/api/profile", { personal, education });
-      Swal.fire("Success", "Profile Saved Successfully", "success");
-    } catch (err) {
-      Swal.fire("Error", "Something went wrong", "error");
-    }
+    Swal.fire({
+      icon: "success",
+      title: "Profile Saved!",
+      timer: 1500,
+      showConfirmButton: false
+    }).then(() => navigate("/view-profile"));
   };
 
+
+  const getInputStyle = (field) => ({
+    ...styles.input,
+    border: errors[field] ? "2px solid red" : "1px solid #ccc"
+  });
+
+
   return (
-    <div style={{ width: "100%", padding: 20, maxHeight: "90vh", overflowY: "scroll" }}>
-      <h2
-        style={{
-          textAlign: "center",
-          textDecoration: "underline",
-          color: "#27ae60",
-          marginBottom: 20,
-          width: "100%",
-        }}
-      >
-        Create Profile
-      </h2>
+    <div style={styles.page}>
+      <div style={styles.formContainer}>
+        <h2 style={styles.heading}>Create Profile</h2>
 
-      {/* PERSONAL */}
-      <h3 style={{ color: "#2980b9" }}>Personal Details</h3>
+        <form onSubmit={handleSubmit} style={styles.form}>  
+          
+          {/* ---------------- PERSONAL ---------------- */}
+          <b>Personal Details</b>
 
-      <input type="text" placeholder="Full Name"
-        value={personal.name}
-        onChange={(e) => setPersonal({ ...personal, name: e.target.value })}
-      />
-      {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
+          <input placeholder="Name" value={personal.name} style={getInputStyle("name")}
+            onChange={(e)=> setPersonal({...personal,name:e.target.value})} />
 
-      <input type="email" placeholder="Email"
-        value={personal.email}
-        onChange={(e) => setPersonal({ ...personal, email: e.target.value })}
-      />
-      {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
+          <input placeholder="Email" value={personal.email} style={getInputStyle("email")}
+            onChange={(e)=> setPersonal({...personal,email:e.target.value})} />
 
-      <input type="text" placeholder="Phone Number"
-        value={personal.phone}
-        onChange={(e) => setPersonal({ ...personal, phone: e.target.value })}
-      />
-      {errors.phone && <p style={{ color: "red" }}>{errors.phone}</p>}
+          <input placeholder="Phone Number" value={personal.phone} style={getInputStyle("phone")}
+            onChange={(e)=> setPersonal({...personal,phone:e.target.value})} />
 
-      <select value={personal.gender}
-        onChange={(e) => setPersonal({ ...personal, gender: e.target.value })}
-      >
-        <option value="">Select Gender</option>
-        <option>Male</option>
-        <option>Female</option>
-      </select>
-      {errors.gender && <p style={{ color: "red" }}>{errors.gender}</p>}
+          <select value={personal.gender} style={getInputStyle("gender")}
+            onChange={(e)=> setPersonal({...personal,gender:e.target.value})}>
+            <option value="">Select Gender</option>
+            <option>Female</option><option>Male</option><option>Other</option>
+          </select>
 
-      <input type="date"
-        value={personal.dob}
-        onChange={(e) => setPersonal({ ...personal, dob: e.target.value })}
-      />
-      {errors.dob && <p style={{ color: "red" }}>{errors.dob}</p>}
+          <input type="date" value={personal.dob} style={getInputStyle("dob")}
+            onChange={(e)=> setPersonal({...personal,dob:e.target.value})}/>
 
-      {/* 12TH DETAILS */}
-      <h3 style={{ color: "#2980b9", marginTop: 20 }}>12th / HSC Details</h3>
 
-      <input type="text" placeholder="School Name"
-        value={education.hscSchool}
-        onChange={(e) => setEducation({ ...education, hscSchool: e.target.value })}
-      />
-      {errors.hscSchool && <p style={{ color: "red" }}>{errors.hscSchool}</p>}
+          {/* ---------------- ADDRESS ---------------- */}
+          <b style={{marginTop:15}}>Address</b>
 
-      <select value={education.hscBoard}
-        onChange={(e) => setEducation({ ...education, hscBoard: e.target.value })}
-      >
-        <option value="">Select Board</option>
-        {boards.map((b) => <option key={b}>{b}</option>)}
-      </select>
-      {errors.hscBoard && <p style={{ color: "red" }}>{errors.hscBoard}</p>}
+          <select value={address.country} onChange={(e)=> setAddress({...address,country:e.target.value})}>
+            <option value="">Select Country</option>
+            {countries.map(c=> <option key={c}>{c}</option>)}
+          </select>
 
-      <input type="number" placeholder="Percentage / Marks"
-        value={education.hscMarks}
-        onChange={(e) => setEducation({ ...education, hscMarks: e.target.value })}
-      />
-      {errors.hscMarks && <p style={{ color: "red" }}>{errors.hscMarks}</p>}
+          <input placeholder="Address Line" value={address.line}
+            onChange={(e)=> setAddress({...address,line:e.target.value})} />
 
-      <input type="number" placeholder="Year of Passing"
-        value={education.hscYop}
-        onChange={(e) => setEducation({ ...education, hscYop: e.target.value })}
-      />
-      {errors.hscYop && <p style={{ color: "red" }}>{errors.hscYop}</p>}
 
-      {/* UG DETAILS */}
-      <h3 style={{ color: "#2980b9", marginTop: 20 }}>UG Details</h3>
+          {/* ---------------- 10th ---------------- */}
+          <b>10th Education</b>
 
-      <select value={education.university}
-        onChange={(e) => setEducation({ ...education, university: e.target.value })}
-      >
-        <option value="">Select University</option>
-        {universities.map((u) => <option key={u}>{u}</option>)}
-      </select>
-      {errors.university && <p style={{ color: "red" }}>{errors.university}</p>}
+          <select value={education.tenth.school}
+            onChange={(e)=> setEducation({...education,tenth:{...education.tenth,school:e.target.value}})}>
+            <option value="">Select School</option>
+            {schools.map(s=> <option key={s}>{s}</option>)}
+          </select>
 
-      <input type="text" placeholder="College Name"
-        value={education.college}
-        onChange={(e) => setEducation({ ...education, college: e.target.value })}
-      />
-      {errors.college && <p style={{ color: "red" }}>{errors.college}</p>}
+          <input placeholder="Place" value={education.tenth.place}
+            onChange={(e)=> setEducation({...education,tenth:{...education.tenth,place:e.target.value}})} />
 
-      <select value={education.department}
-        onChange={(e) => setEducation({ ...education, department: e.target.value })}
-      >
-        <option value="">Select Department</option>
-        {departments.map((d) => <option key={d}>{d}</option>)}
-      </select>
-      {errors.department && <p style={{ color: "red" }}>{errors.department}</p>}
+          <input placeholder="Percentage" value={education.tenth.percentage}
+            onChange={(e)=> setEducation({...education,tenth:{...education.tenth,percentage:e.target.value}})} />
 
-      <input type="number" placeholder="CGPA (0 - 10)"
-        value={education.ugCgpa}
-        onChange={(e) => setEducation({ ...education, ugCgpa: e.target.value })}
-      />
-      {errors.ugCgpa && <p style={{ color: "red" }}>{errors.ugCgpa}</p>}
 
-      <input type="number" placeholder="Year of Passing"
-        value={education.ugYop}
-        onChange={(e) => setEducation({ ...education, ugYop: e.target.value })}
-      />
-      {errors.ugYop && <p style={{ color: "red" }}>{errors.ugYop}</p>}
+          {/* ---------------- 12th ---------------- */}
+          <b>12th Education</b>
 
-      <button
-        onClick={handleSubmit}
-        style={{
-          marginTop: 20,
-          padding: "10px",
-          background: "#27ae60",
-          color: "white",
-          width: "100%",
-          border: "none",
-          cursor: "pointer",
-        }}
-      >
-        Save Profile
-      </button>
+          <select value={education.twelfth.school}
+            onChange={(e)=> setEducation({...education,twelfth:{...education.twelfth,school:e.target.value}})}>
+            <option value="">Select School</option>
+            {schools.map(s=> <option key={s}>{s}</option>)}
+          </select>
+
+          <input placeholder="Place" value={education.twelfth.place}
+            onChange={(e)=> setEducation({...education,twelfth:{...education.twelfth,place:e.target.value}})} />
+
+          <input placeholder="Percentage" value={education.twelfth.percentage}
+            onChange={(e)=> setEducation({...education,twelfth:{...education.twelfth,percentage:e.target.value}})} />
+
+
+          {/* ---------------- UG ---------------- */}
+          <b>UG Education</b>
+
+          <select value={education.ug.university}
+            onChange={(e)=> setEducation({...education,ug:{...education.ug,university:e.target.value}})}>
+            <option value="">Select University</option>
+            {universities.map(u=> <option key={u}>{u}</option>)}
+          </select>
+
+          <select value={education.ug.college}
+            onChange={(e)=> setEducation({...education,ug:{...education.ug,college:e.target.value}})}>
+            <option value="">Select College</option>
+            {colleges.map(c=> <option key={c}>{c}</option>)}
+          </select>
+
+          <select value={education.ug.department}
+            onChange={(e)=> setEducation({...education,ug:{...education.ug,department:e.target.value}})}>
+            <option value="">Select Department</option>
+            {departments.map(d=> <option key={d}>{d}</option>)}
+          </select>
+
+          <input placeholder="CGPA" value={education.ug.cgpa}
+            onChange={(e)=> setEducation({...education,ug:{...education.ug,cgpa:e.target.value}})} />
+
+          <input placeholder="Graduation Year" value={education.ug.graduationYear}
+            onChange={(e)=> setEducation({...education,ug:{...education.ug,graduationYear:e.target.value}})} />
+
+          <input placeholder="Active Backlogs" value={education.ug.activeBacklogs}
+            onChange={(e)=> setEducation({...education,ug:{...education.ug,activeBacklogs:e.target.value}})} />
+
+
+          {/* ---------------- SAVE ---------------- */}
+          <button type="submit" style={styles.button}>Save Profile</button>
+        </form>
+      </div>
     </div>
   );
 }
+
+
+// ---------------- STYLES ----------------
+const styles = {
+  page: { display:"flex", justifyContent:"center", alignItems:"center", height:"100vh",
+    background:"linear-gradient(to right,#f7971e,#ffd200)" },
+
+  formContainer:{ width:"450px", background:"#fff", padding:20, borderRadius:12,
+    boxShadow:"0 4px 12px rgba(0,0,0,0.1)", height:"90vh", overflowY:"auto" },
+
+  form:{ display:"flex", flexDirection:"column", gap:10 },
+
+  input:{ padding:8, borderRadius:6, outline:"none" },
+
+  button:{ marginTop:20, padding:10, background:"#2ecc71", color:"#fff", border:"none",
+    borderRadius:8, cursor:"pointer", fontWeight:"bold" },
+
+  heading:{ textAlign:"center", fontSize:"26px", fontWeight:"bold",
+    color:"#27ae60", marginBottom:20, borderBottom:"3px solid #27ae60", paddingBottom:8 }
+};
