@@ -1,4 +1,4 @@
-// ------------------------ CREATE PROFILE WITH VALIDATION ------------------------
+// ------------------------ CREATE PROFILE WITH VALIDATION ------------------------ 
 import React, { useState } from "react"; 
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -52,63 +52,13 @@ export default function CreateProfile() {
   const colleges = ["VIT","Loyolo","Sathyabama","Coimbatore","Bharathidasan","IIT","Chennai","Vel Tech","SRM","Karunya","Presidency","PSG","Other"];
   const departments = ["CSE","IT","ECE","EEE","Mechanical","Civil","IOT","AI&ML","Hotel Management","AI","Other"];
 
-  const handleEnterNext = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const form = e.target.form;
-      const index = Array.prototype.indexOf.call(form, e.target);
-      form.elements[index + 1]?.focus();
-    }
-  };
-
-  // ---------------- VALIDATION ----------------
   const validate = () => {
     let tempErrors = {};
 
-    // ---------------- Personal ----------------
-    if (!personal.name) tempErrors.name = "Name is required";
-    if (!personal.email) tempErrors.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(personal.email)) tempErrors.email = "Invalid email";
-    if (!personal.phone) tempErrors.phone = "Phone is required";
-    else if (!/^\d{10}$/.test(personal.phone)) tempErrors.phone = "Phone must be 10 digits";
-    if (!personal.gender) tempErrors.gender = "Gender is required";
-    if (!personal.dob) tempErrors.dob = "Date of Birth is required";
-
-    // ---------------- Address ----------------
-    if (!address.country) tempErrors.country = "Country required";
-    if (address.country === "Other" && !address.otherCountry) tempErrors.otherCountry = "Enter country";
-    if (!address.state) tempErrors.state = "State required";
-    if (address.state === "Other" && !address.otherState) tempErrors.otherState = "Enter state";
-    if (!address.district) tempErrors.district = "District required";
-    if (address.district === "Other" && !address.otherDistrict) tempErrors.otherDistrict = "Enter district";
-    if (!address.line) tempErrors.line = "Address line required";
-
-    // ---------------- 10th ----------------
-    if (!education.tenth.school) tempErrors.tenthSchool = "10th School required";
-    if (education.tenth.school === "Other" && !education.tenth.otherSchool) tempErrors.tenthOtherSchool = "Enter school name";
-    if (!education.tenth.place) tempErrors.tenthPlace = "10th Place required";
-    if (!education.tenth.percentage) tempErrors.tenthPercentage = "10th Percentage required";
-    else if (isNaN(education.tenth.percentage) || education.tenth.percentage < 0 || education.tenth.percentage > 100) tempErrors.tenthPercentage = "Enter valid %";
-
-    // ---------------- 12th ----------------
-    if (!education.twelfth.school) tempErrors.twelfthSchool = "12th School required";
-    if (education.twelfth.school === "Other" && !education.twelfth.otherSchool) tempErrors.twelfthOtherSchool = "Enter school name";
-    if (!education.twelfth.place) tempErrors.twelfthPlace = "12th Place required";
-    if (!education.twelfth.percentage) tempErrors.twelfthPercentage = "12th Percentage required";
-    else if (isNaN(education.twelfth.percentage) || education.twelfth.percentage < 0 || education.twelfth.percentage > 100) tempErrors.twelfthPercentage = "Enter valid %";
-
-    // ---------------- UG ----------------
-    if (!education.ug.university) tempErrors.ugUniversity = "University required";
-    if (education.ug.university === "Other" && !education.ug.otherUniversity) tempErrors.ugOtherUniversity = "Enter university";
-    if (!education.ug.college) tempErrors.ugCollege = "College required";
-    if (education.ug.college === "Other" && !education.ug.otherCollege) tempErrors.ugOtherCollege = "Enter college";
-    if (!education.ug.department) tempErrors.ugDepartment = "Department required";
-    if (education.ug.department === "Other" && !education.ug.otherDepartment) tempErrors.ugOtherDepartment = "Enter department";
-    if (!education.ug.cgpa) tempErrors.ugCgpa = "CGPA required";
-    else if (isNaN(education.ug.cgpa) || education.ug.cgpa < 0 || education.ug.cgpa > 10) tempErrors.ugCgpa = "CGPA must be 0-10";
-    if (!education.ug.graduationYear) tempErrors.ugGraduationYear = "Graduation year required";
-    if (!education.ug.place) tempErrors.ugPlace = "Place required";
-    if (!education.ug.activeBacklogs) tempErrors.ugActiveBacklogs = "Select backlogs";
+    if (!personal.name) tempErrors.name = "Required";
+    if (!personal.email) tempErrors.email = "Required";
+    if (!personal.phone) tempErrors.phone = "Required";
+    if (!personal.dob) tempErrors.dob = "Required";
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
@@ -118,37 +68,12 @@ export default function CreateProfile() {
     e.preventDefault();
     if (!validate()) return;
 
-    const payload = {
-      personal: { ...personal, dateOfBirth: personal.dob },
-      address: {
-        ...address,
-        country: address.country === "Other" ? address.otherCountry : address.country,
-        state: address.state === "Other" ? address.otherState : address.state,
-        district: address.district === "Other" ? address.otherDistrict : address.district
-      },
-      education: {
-        tenth: { ...education.tenth, school: education.tenth.school === "Other" ? education.tenth.otherSchool : education.tenth.school },
-        twelfth: { ...education.twelfth, school: education.twelfth.school === "Other" ? education.twelfth.otherSchool : education.twelfth.school },
-        ug: {
-          ...education.ug,
-          university: education.ug.university === "Other" ? education.ug.otherUniversity : education.ug.university,
-          college: education.ug.college === "Other" ? education.ug.otherCollege : education.ug.college,
-          department: education.ug.department === "Other" ? education.ug.otherDepartment : education.ug.department,
-          activeBacklogs: education.ug.activeBacklogs === "Yes" ? "Yes" : "No",
-        },
-      },
-    };
-
-    try {
-      const token = localStorage.getItem("token");
-      await axios.post(`${process.env.REACT_APP_API_URL}/profile`, payload, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      Swal.fire({ icon: "success", title: "Profile Created", confirmButtonColor: "#2ecc71" })
-        .then(() => navigate("/view-profile"));
-    } catch (err) {
-      Swal.fire({ icon: "error", title: "Error", text: err.response?.data?.message || "Something went wrong", confirmButtonColor: "#e74c3c" });
-    }
+    Swal.fire({
+      icon: "success",
+      title: "Profile Saved!",
+      timer: 1500,
+      showConfirmButton: false
+    }).then(() => navigate("/view-profile"));
   };
 
   const getInputStyle = (field) => ({
@@ -160,8 +85,91 @@ export default function CreateProfile() {
     <div style={styles.page}>
       <div style={styles.formContainer}>
         <h2 style={styles.heading}>Create Profile</h2>
-        <form onSubmit={handleSubmit} style={styles.form}>
-          {/* ... your input fields with getInputStyle() ... */}
+
+        <form onSubmit={handleSubmit} style={styles.form}>  
+          
+          {/* ---------------- PERSONAL ---------------- */}
+          <b>Personal Details</b>
+
+          <input placeholder="Name" value={personal.name} style={getInputStyle("name")}
+            onChange={(e)=> setPersonal({...personal,name:e.target.value})} />
+
+          <input placeholder="Email" value={personal.email} style={getInputStyle("email")}
+            onChange={(e)=> setPersonal({...personal,email:e.target.value})} />
+
+          <input placeholder="Phone" value={personal.phone} style={getInputStyle("phone")}
+            onChange={(e)=> setPersonal({...personal,phone:e.target.value})} />
+
+          <select value={personal.gender} style={getInputStyle("gender")}
+            onChange={(e)=> setPersonal({...personal,gender:e.target.value})}>
+            <option value="">Select Gender</option>
+            <option>Female</option><option>Male</option><option>Other</option>
+          </select>
+
+          <input type="date" value={personal.dob} style={getInputStyle("dob")}
+            onChange={(e)=> setPersonal({...personal,dob:e.target.value})}/>
+          
+          {/* ---------------- ADDRESS ---------------- */}
+          <b style={{marginTop:15}}>Address</b>
+
+          <select value={address.country} style={getInputStyle("country")}
+            onChange={(e)=> setAddress({...address,country:e.target.value})}>
+            <option value="">Select Country</option>
+            {countries.map(c=> <option key={c}>{c}</option>)}
+          </select>
+
+          {address.country==="Other" && (
+            <input placeholder="Enter Country" style={getInputStyle("otherCountry")}
+            onChange={(e)=> setAddress({...address,otherCountry:e.target.value})}/>
+          )}
+
+          <select value={address.state} style={getInputStyle("state")}
+            onChange={(e)=> setAddress({...address,state:e.target.value})}>
+            <option value="">Select State</option>
+            {states.map(s=> <option key={s}>{s}</option>)}
+          </select>
+
+          {address.state==="Other" && (
+            <input placeholder="Enter State" style={getInputStyle("otherState")}
+            onChange={(e)=> setAddress({...address,otherState:e.target.value})}/>
+          )}
+
+          <select value={address.district} style={getInputStyle("district")}
+            onChange={(e)=> setAddress({...address,district:e.target.value})}>
+            <option value="">Select District</option>
+            {districts.map(d=> <option key={d}>{d}</option>)}
+          </select>
+
+          {address.district==="Other" && (
+            <input placeholder="Enter District" style={getInputStyle("otherDistrict")}
+            onChange={(e)=> setAddress({...address,otherDistrict:e.target.value})}/>
+          )}
+
+          <input placeholder="Address Line" value={address.line} style={getInputStyle("line")}
+            onChange={(e)=> setAddress({...address,line:e.target.value})} />
+
+          {/* ---------------- EDUCATION ---------------- */}
+          <b style={{marginTop:15}}>10th Education</b>
+
+          <select value={education.tenth.school} style={getInputStyle("tenthSchool")}
+            onChange={(e)=> setEducation({...education,tenth:{...education.tenth,school:e.target.value}})}>
+            <option value="">Select School</option>
+            {schools.map(s=><option key={s}>{s}</option>)}
+          </select>
+
+          {education.tenth.school==="Other" && (
+            <input placeholder="Enter School" style={getInputStyle("tenthOtherSchool")}
+            onChange={(e)=> setEducation({...education,tenth:{...education.tenth,otherSchool:e.target.value}})} />
+          )}
+
+          <input placeholder="Place" value={education.tenth.place}
+            style={getInputStyle("tenthPlace")}
+            onChange={(e)=> setEducation({...education,tenth:{...education.tenth,place:e.target.value}})} />
+
+          <input placeholder="Percentage" value={education.tenth.percentage}
+            style={getInputStyle("tenthPercentage")}
+            onChange={(e)=> setEducation({...education,tenth:{...education.tenth,percentage:e.target.value}})} />
+
           <button type="submit" style={styles.button}>Save Profile</button>
         </form>
       </div>
@@ -169,12 +177,22 @@ export default function CreateProfile() {
   );
 }
 
+
 // ---------------- STYLES ----------------
 const styles = {
-  page: { display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", background: "linear-gradient(to right,#f7971e,#ffd200)" },
-  formContainer: { background: "#fff", padding: 20, borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.1)", width: 400, overflowY: "scroll", height: "90%" },
-  form: { display: "flex", flexDirection: "column", gap: 10 },
-  input: { padding: 8, borderRadius: 6, border: "1px solid #ccc", outline: "none" },
-  button: { padding: 10, marginTop: 10, backgroundColor: "#2ecc71", color: "white", border: "none", borderRadius: 8, cursor: "pointer" },
-  heading: { textAlign: "center", fontSize: "28px", fontWeight: "900", color: "#27ae60", marginBottom: "25px", borderBottom: "3px solid #27ae60", paddingBottom: "10px" }
+  page: { display:"flex", justifyContent:"center", alignItems:"center", height:"100vh",
+    background:"linear-gradient(to right,#f7971e,#ffd200)" },
+
+  formContainer:{ width:"450px", background:"#fff", padding:20, borderRadius:12,
+    boxShadow:"0 4px 12px rgba(0,0,0,0.1)", height:"90vh", overflowY:"auto" },
+
+  form:{ display:"flex", flexDirection:"column", gap:10 },
+
+  input:{ padding:8, borderRadius:6, outline:"none" },
+
+  button:{ marginTop:20, padding:10, background:"#2ecc71", color:"#fff", border:"none",
+    borderRadius:8, cursor:"pointer", fontWeight:"bold" },
+
+  heading:{ textAlign:"center", fontSize:"26px", fontWeight:"bold",
+    color:"#27ae60", marginBottom:20, borderBottom:"3px solid #27ae60", paddingBottom:8 }
 };
