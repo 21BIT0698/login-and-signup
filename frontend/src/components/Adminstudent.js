@@ -82,17 +82,19 @@ export default function AdminStudents() {
     return <p style={{ textAlign: "center", marginTop: 50 }}>Loading students...</p>;
 
   return (
-    <div style={{ padding: 20 }}>
+  <div style={{ padding: 20, width: "100%" }}>
       
-      {/* UPDATED HEADING CENTER */}
       <h2 style={{
         marginBottom: 20,
         color: "#27ae60",
         textDecoration: "underline",
-        textAlign: "center"
+        width: "100%",
+        textAlign: "center",
+        display: "block"
       }}>
         All Students
       </h2>
+
 
       {/* ---------------- EDIT FORM POPUP ---------------- */}
       {editData && (
