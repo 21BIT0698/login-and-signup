@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"; 
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -78,12 +78,23 @@ export default function AdminStudents() {
     }
   };
 
+  // ================= HANDLE EDIT BUTTON =================
+  const handleEditClick = (student) => {
+    setEditData({
+      ...student,
+      education: {
+        tenth: student.education?.tenth || { school: "", percentage: "", place: "" },
+        twelfth: student.education?.twelfth || { school: "", percentage: "", place: "" },
+        ug: student.education?.ug || { university: "", college: "", department: "", cgpa: "", graduationYear: "", place: "", activeBacklogs: "" }
+      }
+    });
+  };
+
   if (!students.length)
     return <p style={{ textAlign: "center", marginTop: 50 }}>Loading students...</p>;
 
   return (
-  <div style={{ padding: 20, width: "100%" }}>
-      
+    <div style={{ padding: 20, width: "100%" }}>
       <h2 style={{
         marginBottom: 20,
         color: "#27ae60",
@@ -94,7 +105,6 @@ export default function AdminStudents() {
       }}>
         All Students
       </h2>
-
 
       {/* ---------------- EDIT FORM POPUP ---------------- */}
       {editData && (
@@ -166,181 +176,76 @@ export default function AdminStudents() {
             />
 
             {/* EDUCATION */}
-          <h3>10th Details</h3>
-<input
-  value={editData.education?.tenth?.school || ""}
-  onChange={(e) =>
-    setEditData({
-      ...editData,
-      education: {
-        ...editData.education,
-        tenth: { ...editData.education.tenth, school: e.target.value },
-      },
-    })
-  }
-  placeholder="10th School"
-/>
-<input
-  value={editData.education?.tenth?.percentage || ""}
-  onChange={(e) =>
-    setEditData({
-      ...editData,
-      education: {
-        ...editData.education,
-        tenth: { ...editData.education.tenth, percentage: e.target.value },
-      },
-    })
-  }
-  placeholder="10th Percentage"
-/>
-<input
-  value={editData.education?.tenth?.place || ""}
-  onChange={(e) =>
-    setEditData({
-      ...editData,
-      education: {
-        ...editData.education,
-        tenth: { ...editData.education.tenth, place: e.target.value },
-      },
-    })
-  }
-  placeholder="10th Place"
-/>
+            <h3>10th Details</h3>
+            <input
+              value={editData.education?.tenth?.school || ""}
+              onChange={(e) => setEditData({ ...editData, education: { ...editData.education, tenth: { ...editData.education.tenth, school: e.target.value } } })}
+              placeholder="10th School"
+            />
+            <input
+              value={editData.education?.tenth?.percentage || ""}
+              onChange={(e) => setEditData({ ...editData, education: { ...editData.education, tenth: { ...editData.education.tenth, percentage: e.target.value } } })}
+              placeholder="10th Percentage"
+            />
+            <input
+              value={editData.education?.tenth?.place || ""}
+              onChange={(e) => setEditData({ ...editData, education: { ...editData.education, tenth: { ...editData.education.tenth, place: e.target.value } } })}
+              placeholder="10th Place"
+            />
 
-<h3>12th Details</h3>
-<input
-  value={editData.education?.twelfth?.school || ""}
-  onChange={(e) =>
-    setEditData({
-      ...editData,
-      education: {
-        ...editData.education,
-        twelfth: { ...editData.education.twelfth, school: e.target.value },
-      },
-    })
-  }
-  placeholder="12th School"
-/>
-<input
-  value={editData.education?.twelfth?.percentage || ""}
-  onChange={(e) =>
-    setEditData({
-      ...editData,
-      education: {
-        ...editData.education,
-        twelfth: { ...editData.education.twelfth, percentage: e.target.value },
-      },
-    })
-  }
-  placeholder="12th Percentage"
-/>
-<input
-  value={editData.education?.twelfth?.place || ""}
-  onChange={(e) =>
-    setEditData({
-      ...editData,
-      education: {
-        ...editData.education,
-        twelfth: { ...editData.education.twelfth, place: e.target.value },
-      },
-    })
-  }
-  placeholder="12th Place"
-/>
+            <h3>12th Details</h3>
+            <input
+              value={editData.education?.twelfth?.school || ""}
+              onChange={(e) => setEditData({ ...editData, education: { ...editData.education, twelfth: { ...editData.education.twelfth, school: e.target.value } } })}
+              placeholder="12th School"
+            />
+            <input
+              value={editData.education?.twelfth?.percentage || ""}
+              onChange={(e) => setEditData({ ...editData, education: { ...editData.education, twelfth: { ...editData.education.twelfth, percentage: e.target.value } } })}
+              placeholder="12th Percentage"
+            />
+            <input
+              value={editData.education?.twelfth?.place || ""}
+              onChange={(e) => setEditData({ ...editData, education: { ...editData.education, twelfth: { ...editData.education.twelfth, place: e.target.value } } })}
+              placeholder="12th Place"
+            />
 
-<h3>UG Details</h3>
-<input
-  value={editData.education?.ug?.university || ""}
-  onChange={(e) =>
-    setEditData({
-      ...editData,
-      education: {
-        ...editData.education,
-        ug: { ...editData.education.ug, university: e.target.value },
-      },
-    })
-  }
-  placeholder="UG University"
-/>
-<input
-  value={editData.education?.ug?.college || ""}
-  onChange={(e) =>
-    setEditData({
-      ...editData,
-      education: {
-        ...editData.education,
-        ug: { ...editData.education.ug, college: e.target.value },
-      },
-    })
-  }
-  placeholder="UG College"
-/>
-<input
-  value={editData.education?.ug?.department || ""}
-  onChange={(e) =>
-    setEditData({
-      ...editData,
-      education: {
-        ...editData.education,
-        ug: { ...editData.education.ug, department: e.target.value },
-      },
-    })
-  }
-  placeholder="UG Department"
-/>
-<input
-  value={editData.education?.ug?.cgpa || ""}
-  onChange={(e) =>
-    setEditData({
-      ...editData,
-      education: {
-        ...editData.education,
-        ug: { ...editData.education.ug, cgpa: e.target.value },
-      },
-    })
-  }
-  placeholder="UG CGPA"
-/>
-<input
-  value={editData.education?.ug?.graduationYear || ""}
-  onChange={(e) =>
-    setEditData({
-      ...editData,
-      education: {
-        ...editData.education,
-        ug: { ...editData.education.ug, graduationYear: e.target.value },
-      },
-    })
-  }
-  placeholder="UG Graduation Year"
-/>
-<input
-  value={editData.education?.ug?.place || ""}
-  onChange={(e) =>
-    setEditData({
-      ...editData,
-      education: {
-        ...editData.education,
-        ug: { ...editData.education.ug, place: e.target.value },
-      },
-    })
-  }
-  placeholder="UG Place"
-/>
-<input
-  value={editData.education?.ug?.activeBacklogs || ""}
-  onChange={(e) =>
-    setEditData({
-      ...editData,
-      education: {
-        ...editData.education,
-        ug: { ...editData.education.ug, activeBacklogs: e.target.value },
-      },
-    })
-  }
-  placeholder="Active Backlogs"
-/>
-
+            <h3>UG Details</h3>
+            <input
+              value={editData.education?.ug?.university || ""}
+              onChange={(e) => setEditData({ ...editData, education: { ...editData.education, ug: { ...editData.education.ug, university: e.target.value } } })}
+              placeholder="UG University"
+            />
+            <input
+              value={editData.education?.ug?.college || ""}
+              onChange={(e) => setEditData({ ...editData, education: { ...editData.education, ug: { ...editData.education.ug, college: e.target.value } } })}
+              placeholder="UG College"
+            />
+            <input
+              value={editData.education?.ug?.department || ""}
+              onChange={(e) => setEditData({ ...editData, education: { ...editData.education, ug: { ...editData.education.ug, department: e.target.value } } })}
+              placeholder="UG Department"
+            />
+            <input
+              value={editData.education?.ug?.cgpa || ""}
+              onChange={(e) => setEditData({ ...editData, education: { ...editData.education, ug: { ...editData.education.ug, cgpa: e.target.value } } })}
+              placeholder="UG CGPA"
+            />
+            <input
+              value={editData.education?.ug?.graduationYear || ""}
+              onChange={(e) => setEditData({ ...editData, education: { ...editData.education, ug: { ...editData.education.ug, graduationYear: e.target.value } } })}
+              placeholder="UG Graduation Year"
+            />
+            <input
+              value={editData.education?.ug?.place || ""}
+              onChange={(e) => setEditData({ ...editData, education: { ...editData.education, ug: { ...editData.education.ug, place: e.target.value } } })}
+              placeholder="UG Place"
+            />
+            <input
+              value={editData.education?.ug?.activeBacklogs || ""}
+              onChange={(e) => setEditData({ ...editData, education: { ...editData.education, ug: { ...editData.education.ug, activeBacklogs: e.target.value } } })}
+              placeholder="Active Backlogs"
+            />
 
             <button type="submit" style={{ background: "green", color: "#fff", padding: 10, border: "none" }}>Save</button>
             <button type="button" style={{ background: "gray", color: "#fff", padding: 10, border: "none" }} onClick={() => setEditData(null)}>Cancel</button>
@@ -353,8 +258,7 @@ export default function AdminStudents() {
         <table style={{ borderCollapse: "collapse", width: "100%" }}>
           <thead>
             <tr>
-              {["Name","Email","Phone","Gender","DOB","Country","State","District","Address","10th School","10th score","10th Place","12th School","12th score","12th Place","UG University","UG College","Department","CGPA","Graduation Year","Place","Backlogs","Actions"]
-                .map((h, i) => <th key={i} style={styles.th}>{h}</th>)}
+              {["Name","Email","Phone","Gender","DOB","Country","State","District","Address","10th School","10th score","10th Place","12th School","12th score","12th Place","UG University","UG College","Department","CGPA","Graduation Year","Place","Backlogs","Actions"].map((h, i) => <th key={i} style={styles.th}>{h}</th>)}
             </tr>
           </thead>
           <tbody>
@@ -382,10 +286,9 @@ export default function AdminStudents() {
                 <td style={styles.td}>{student.education?.ug?.graduationYear}</td>
                 <td style={styles.td}>{student.education?.ug?.place}</td>
                 <td style={styles.td}>{student.education?.ug?.activeBacklogs}</td>
-
                 <td style={styles.td}>
                   <div style={{ display: "flex", gap: "10px" }}>
-                    <button style={btnEdit} onClick={() => setEditData(JSON.parse(JSON.stringify(student)))}>Edit</button>
+                    <button style={btnEdit} onClick={() => handleEditClick(student)}>Edit</button>
                     <button style={btnDelete} onClick={() => deleteStudent(student._id)}>Delete</button>
                   </div>
                 </td>
