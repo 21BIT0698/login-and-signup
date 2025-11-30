@@ -1,220 +1,157 @@
 import React, { useState } from "react";
+import axios from "axios";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateProfile() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    gender: "",
-    dob: "",
-    address: "",
-    country: "",
-    city: "",
-    pincode: "",
-    qualification: "",
-    college: "",
-    cgpa: "",
-    experience: "",
+  const navigate = useNavigate();
+
+  const [personal, setPersonal] = useState({
+    name: "", email: "", phone: "", gender: "", dob: ""
+  });
+
+  const [address, setAddress] = useState({
+    state: "", otherState: "", district: "", otherDistrict: "", country: "", otherCountry: "", line: ""
+  });
+
+  const [education, setEducation] = useState({
+    tenth: { school: "", otherSchool: "", place: "", percentage: "" },
+    twelfth: { school: "", otherSchool: "", place: "", percentage: "" },
+    ug: { university: "", otherUniversity: "", college: "", otherCollege: "", department: "", otherDepartment: "", cgpa: "", graduationYear: "", place: "", activeBacklogs: "" }
   });
 
   const [errors, setErrors] = useState({});
 
-  // ----------------- VALIDATION FUNCTION -----------------
+  const countries = ["India","USA","UK","Canada","Australia","Germany","France","Japan","China","Brazil","Russia","South Africa","Other"];
+  const states = ["Tamil Nadu","Kerala","Karnataka","Maharashtra","Delhi","Gujarat","Other"];
+  const districts = ["Chennai","Vellore","Tiruvannamalai","Coimbatore","Madurai","Salem","Other"];
+  const schools = ["Government High School","KV","DAV","Jawahar Navodaya","Private School","Other"];
+  const universities = ["Anna University","VIT","SRM","IIT","SASTRA","Thiruvalluvar","Other"];
+  const colleges = ["VIT","SRM","CIT","Government","Private College","Other"];
+  const departments = ["CSE","IT","ECE","EEE","Mechanical","Civil","AI&ML","IoT","Other"];
+
+  const getInputStyle = (field) => ({
+    border: errors[field] ? "2px solid red" : "1px solid #ccc",
+    padding: 8,
+    borderRadius: 6,
+    width: "100%",
+    marginBottom: errors[field] ? 2 : 10
+  });
+
   const validate = () => {
-    let newErrors = {};
+    let tempErrors = {};
 
-    if (!form.name.trim()) newErrors.name = "Name is required";
-    if (!form.email.trim()) newErrors.email = "Email is required";
-    else if (!/^\S+@\S+\.\S+$/.test(form.email)) newErrors.email = "Enter a valid email";
-    
-    if (!form.phone.trim()) newErrors.phone = "Phone number is required";
-    else if (form.phone.length < 10) newErrors.phone = "Phone must be 10 digits";
+    if (!personal.name) tempErrors.name = "Required";
+    if (!personal.email) tempErrors.email = "Required";
+    else if (!/\S+@\S+\.\S+/.test(personal.email)) tempErrors.email = "Invalid email";
 
-    if (!form.gender) newErrors.gender = "Select gender";
+    if (!personal.phone) tempErrors.phone = "Required";
+    else if (!/^\d{10}$/.test(personal.phone)) tempErrors.phone = "Must be 10 digits";
 
-    if (!form.dob) newErrors.dob = "Enter date of birth";
+    if (!personal.gender) tempErrors.gender = "Required";
+    if (!personal.dob) tempErrors.dob = "Required";
 
-    if (!form.address.trim()) newErrors.address = "Enter address";
+    if (!address.country) tempErrors.country = "Required";
+    if (address.country==="Other" && !address.otherCountry) tempErrors.otherCountry = "Required";
 
-    if (!form.country) newErrors.country = "Select your country";
+    if (!address.state) tempErrors.state = "Required";
+    if (address.state==="Other" && !address.otherState) tempErrors.otherState = "Required";
 
-    if (!form.city.trim()) newErrors.city = "Enter city";
+    if (!address.district) tempErrors.district = "Required";
+    if (address.district==="Other" && !address.otherDistrict) tempErrors.otherDistrict = "Required";
 
-    if (!form.pincode.trim()) newErrors.pincode = "Enter pincode";
+    if (!address.line) tempErrors.line = "Required";
 
-    if (!form.qualification.trim()) newErrors.qualification = "Enter qualification";
+    if (!education.tenth.school) tempErrors.tenthSchool = "Required";
+    if (education.tenth.school==="Other" && !education.tenth.otherSchool) tempErrors.tenthOtherSchool="Required";
 
-    if (!form.college.trim()) newErrors.college = "Enter college name";
+    if (!education.tenth.place) tempErrors.tenthPlace="Required";
+    if (!education.tenth.percentage) tempErrors.tenthPercentage="Required";
 
-    if (!form.cgpa.trim()) newErrors.cgpa = "Enter CGPA / Percentage";
+    if (!education.twelfth.school) tempErrors.twelfthSchool = "Required";
+    if (education.twelfth.school==="Other" && !education.twelfth.otherSchool) tempErrors.twelfthOtherSchool="Required";
 
-    if (!form.experience.trim()) newErrors.experience = "Enter experience or type Fresher";
+    if (!education.twelfth.place) tempErrors.twelfthPlace="Required";
+    if (!education.twelfth.percentage) tempErrors.twelfthPercentage="Required";
 
-    setErrors(newErrors);
+    if (!education.ug.university) tempErrors.ugUniversity="Required";
+    if (education.ug.university==="Other" && !education.ug.otherUniversity) tempErrors.ugOtherUniversity="Required";
 
-    return Object.keys(newErrors).length === 0;
+    if (!education.ug.college) tempErrors.ugCollege="Required";
+    if (education.ug.college==="Other" && !education.ug.otherCollege) tempErrors.ugOtherCollege="Required";
+
+    if (!education.ug.department) tempErrors.ugDepartment="Required";
+    if (education.ug.department==="Other" && !education.ug.otherDepartment) tempErrors.ugOtherDepartment="Required";
+
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length===0;
   };
 
-
-  // ----------------- SUBMIT FUNCTION -----------------
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (validate()) {
-      Swal.fire({
-        title: "Profile Saved!",
-        text: "Your form has been successfully saved.",
-        icon: "success",
-        confirmButtonColor: "#007BFF",
-      });
+    if (!validate()) return;
+
+    const payload = { personal, address, education };
+
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(`${process.env.REACT_APP_API_URL}/profile`, payload , { headers:{ Authorization: `Bearer ${token}` } });
+      Swal.fire({ icon:"success", title:"Profile Created Successfully!" })
+      .then(()=> navigate("/view-profile"));
+    } catch(err) {
+      Swal.fire({ icon:"error", text: err.response?.data?.message || "Something went wrong!" });
     }
   };
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-
-  // ----------------- STYLES -----------------
-  const inputStyle = (field) => ({
-    width: "100%",
-    padding: "10px",
-    borderRadius: "8px",
-    border: errors[field] ? "2px solid red" : "1px solid #777",
-    marginBottom: "6px",
-  });
 
   return (
     <div style={styles.page}>
       <div style={styles.formContainer}>
+        
         <h2 style={styles.heading}>Create Profile</h2>
-
+        
         <form onSubmit={handleSubmit} style={styles.form}>
-          
-          {/* ------- Personal -------- */}
-          <h3 style={styles.section}>Personal Details</h3>
 
-          <input name="name" placeholder="Full Name" style={inputStyle("name")} onChange={handleChange}/>
-          {errors.name && <span style={styles.error}>{errors.name}</span>}
+          <label><b>Name *</b></label>
+          <input style={getInputStyle("name")} value={personal.name} onChange={(e)=>setPersonal({...personal, name:e.target.value})}/>
+          {errors.name && <small style={{color:"red"}}>{errors.name}</small>}
 
-          <input name="email" placeholder="Email" style={inputStyle("email")} onChange={handleChange}/>
-          {errors.email && <span style={styles.error}>{errors.email}</span>}
+          <label><b>Email *</b></label>
+          <input style={getInputStyle("email")} value={personal.email} onChange={(e)=>setPersonal({...personal, email:e.target.value})}/>
+          {errors.email && <small style={{color:"red"}}>{errors.email}</small>}
 
-          <input name="phone" placeholder="Phone Number" style={inputStyle("phone")} onChange={handleChange}/>
-          {errors.phone && <span style={styles.error}>{errors.phone}</span>}
+          <label><b>Phone *</b></label>
+          <input style={getInputStyle("phone")} value={personal.phone} onChange={(e)=>setPersonal({...personal, phone:e.target.value})}/>
+          {errors.phone && <small style={{color:"red"}}>{errors.phone}</small>}
 
-          <select name="gender" style={inputStyle("gender")} onChange={handleChange}>
-            <option value="">Select Gender</option>
-            <option>Female</option>
-            <option>Male</option>
-            <option>Other</option>
+          <label><b>Gender *</b></label>
+          <select style={getInputStyle("gender")} value={personal.gender} onChange={(e)=>setPersonal({...personal, gender:e.target.value})}>
+            <option value="">Select</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+            <option value="Other">Other</option>
           </select>
-          {errors.gender && <span style={styles.error}>{errors.gender}</span>}
+          {errors.gender && <small style={{color:"red"}}>{errors.gender}</small>}
 
-          <input type="date" name="dob" style={inputStyle("dob")} onChange={handleChange}/>
-          {errors.dob && <span style={styles.error}>{errors.dob}</span>}
+          <label><b>Date of Birth *</b></label>
+          <input type="date" style={getInputStyle("dob")} value={personal.dob} onChange={(e)=>setPersonal({...personal, dob:e.target.value})}/>
+          {errors.dob && <small style={{color:"red"}}>{errors.dob}</small>}
 
-
-          {/* ------- Address -------- */}
-          <h3 style={styles.section}>Address Details</h3>
-
-          <textarea name="address" placeholder="Full Address"
-            style={{ ...inputStyle("address"), height: "70px" }} onChange={handleChange}
-          />
-          {errors.address && <span style={styles.error}>{errors.address}</span>}
-
-          <input name="city" placeholder="City" style={inputStyle("city")} onChange={handleChange}/>
-          {errors.city && <span style={styles.error}>{errors.city}</span>}
-
-          <input name="pincode" placeholder="Pincode" style={inputStyle("pincode")} onChange={handleChange}/>
-          {errors.pincode && <span style={styles.error}>{errors.pincode}</span>}
-
-          <select name="country" style={inputStyle("country")} onChange={handleChange}>
-            <option value="">Select Country</option>
-            <option>India</option>
-            <option>USA</option>
-            <option>UK</option>
-            <option>Other</option>
-          </select>
-          {errors.country && <span style={styles.error}>{errors.country}</span>}
-
-
-          {/* ------- Education -------- */}
-          <h3 style={styles.section}>Education Details</h3>
-
-          <input name="qualification" placeholder="Qualification (BE/B.Tech/BCA)" style={inputStyle("qualification")} onChange={handleChange}/>
-          {errors.qualification && <span style={styles.error}>{errors.qualification}</span>}
-
-          <input name="college" placeholder="College Name" style={inputStyle("college")} onChange={handleChange}/>
-          {errors.college && <span style={styles.error}>{errors.college}</span>}
-
-          <input name="cgpa" placeholder="CGPA / Percentage" style={inputStyle("cgpa")} onChange={handleChange}/>
-          {errors.cgpa && <span style={styles.error}>{errors.cgpa}</span>}
-
-
-          {/* ------- Experience -------- */}
-          <h3 style={styles.section}>Experience</h3>
-
-          <input name="experience" placeholder="Enter Experience or Type Fresher" style={inputStyle("experience")} onChange={handleChange}/>
-          {errors.experience && <span style={styles.error}>{errors.experience}</span>}
-
-
-          <button type="submit" style={styles.button}>Save Profile</button>
+          <button type="submit" style={styles.button}>Submit</button>
         </form>
       </div>
     </div>
   );
 }
 
-
-// ----------------- PAGE UI STYLING -----------------
 const styles = {
-  page: {
-    background: "linear-gradient(135deg,#020024,#0575E6,#00F260)",
-    minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "30px",
+  page: { 
+    display: "flex", justifyContent: "center", alignItems: "center",
+    minHeight:"100vh", background:"#ffeaa7"
   },
-  formContainer: {
-    width: "450px",
-    background: "#fff",
-    borderRadius: "15px",
-    padding: "25px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+  formContainer:{
+    width:450, background:"#fff", padding:20, borderRadius:12,
+    boxShadow:"0px 4px 15px rgba(0,0,0,0.2)"
   },
-  heading: {
-    textAlign: "center",
-    color: "#0575E6",
-    marginBottom: "15px",
-  },
-  section: {
-    marginTop: "15px",
-    marginBottom: "8px",
-    color: "#444",
-    borderBottom: "2px solid #00C6FF",
-    width: "fit-content",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "4px",
-  },
-  button: {
-    marginTop: "20px",
-    padding: "10px",
-    background: "#00A9FF",
-    color: "white",
-    fontSize: "18px",
-    borderRadius: "8px",
-    cursor: "pointer",
-    border: "none",
-  },
-  error: {
-    fontSize: "12px",
-    color: "red",
-    marginBottom: "5px",
-  },
+  button:{ padding:10, background:"#22a842", color:"white",
+    border:"none", borderRadius:10, marginTop:20, cursor:"pointer", fontWeight:600 }
 };
