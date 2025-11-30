@@ -28,33 +28,46 @@ export default function CreateProfile() {
     padding: 8,
     borderRadius: 5,
     width: "100%",
-    marginBottom: 10
+    marginBottom: 8
   });
 
   const validate = () => {
     let tempErrors = {};
+    // Personal
     if (!personal.name) tempErrors.name = "Name is required";
     if (!personal.email) tempErrors.email = "Email is required";
     if (!personal.phone) tempErrors.phone = "Phone is required";
     if (!personal.gender) tempErrors.gender = "Gender is required";
     if (!personal.dob) tempErrors.dob = "DOB is required";
 
+    // Address
     if (!address.country) tempErrors.country = "Country required";
+    if (address.country === "Other" && !address.otherCountry) tempErrors.otherCountry = "Enter country";
     if (!address.state) tempErrors.state = "State required";
+    if (address.state === "Other" && !address.otherState) tempErrors.otherState = "Enter state";
     if (!address.district) tempErrors.district = "District required";
+    if (address.district === "Other" && !address.otherDistrict) tempErrors.otherDistrict = "Enter district";
     if (!address.line) tempErrors.line = "Address line required";
 
+    // 10th
     if (!education.tenth.school) tempErrors.tenthSchool = "10th school required";
+    if (education.tenth.school === "Other" && !education.tenth.otherSchool) tempErrors.tenthOtherSchool = "Enter school";
     if (!education.tenth.place) tempErrors.tenthPlace = "10th place required";
     if (!education.tenth.percentage) tempErrors.tenthPercentage = "10th percentage required";
 
+    // 12th
     if (!education.twelfth.school) tempErrors.twelfthSchool = "12th school required";
+    if (education.twelfth.school === "Other" && !education.twelfth.otherSchool) tempErrors.twelfthOtherSchool = "Enter school";
     if (!education.twelfth.place) tempErrors.twelfthPlace = "12th place required";
     if (!education.twelfth.percentage) tempErrors.twelfthPercentage = "12th percentage required";
 
+    // UG
     if (!education.ug.university) tempErrors.ugUniversity = "University required";
+    if (education.ug.university === "Other" && !education.ug.otherUniversity) tempErrors.ugOtherUniversity = "Enter university";
     if (!education.ug.college) tempErrors.ugCollege = "College required";
+    if (education.ug.college === "Other" && !education.ug.otherCollege) tempErrors.ugOtherCollege = "Enter college";
     if (!education.ug.department) tempErrors.ugDepartment = "Department required";
+    if (education.ug.department === "Other" && !education.ug.otherDepartment) tempErrors.ugOtherDepartment = "Enter department";
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
@@ -62,132 +75,105 @@ export default function CreateProfile() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!validate()) return;
+    if (!validate()) return;
 
     const payload = {
-      personal:{...personal,dateOfBirth:personal.dob},
-      address:{...address},
-      education:{...education}
+      personal: { ...personal, dateOfBirth: personal.dob },
+      address: {
+        ...address,
+        country: address.country === "Other" ? address.otherCountry : address.country,
+        state: address.state === "Other" ? address.otherState : address.state,
+        district: address.district === "Other" ? address.otherDistrict : address.district
+      },
+      education: {
+        tenth: { ...education.tenth, school: education.tenth.school === "Other" ? education.tenth.otherSchool : education.tenth.school },
+        twelfth: { ...education.twelfth, school: education.twelfth.school === "Other" ? education.twelfth.otherSchool : education.twelfth.school },
+        ug: {
+          ...education.ug,
+          university: education.ug.university === "Other" ? education.ug.otherUniversity : education.ug.university,
+          college: education.ug.college === "Other" ? education.ug.otherCollege : education.ug.college,
+          department: education.ug.department === "Other" ? education.ug.otherDepartment : education.ug.department
+        }
+      }
     };
 
     try {
       const token = localStorage.getItem("token");
-      await axios.post(`${process.env.REACT_APP_API_URL}/profile`, payload, {headers:{Authorization:`Bearer ${token}`}});
-      Swal.fire({icon:"success",title:"Profile Created"}).then(()=>navigate("/view-profile"));
-    } catch(err) {
-      Swal.fire({icon:"error",title:"Error",text: err.response?.data?.message || "Something went wrong"});
+      await axios.post(`${process.env.REACT_APP_API_URL}/profile`, payload, { headers: { Authorization: `Bearer ${token}` } });
+      Swal.fire({ icon: "success", title: "Profile Created" }).then(() => navigate("/view-profile"));
+    } catch (err) {
+      Swal.fire({ icon: "error", title: "Error", text: err.response?.data?.message || "Something went wrong" });
     }
   };
 
-  return (
-    <div style={{
-      display:"flex",
-      justifyContent:"center",
-      alignItems:"center",
-      minHeight:"100vh",
-      background:"linear-gradient(to right, orange, yellow)"
-    }}>
-      <div style={{
-        background:"#fff",
-        padding:25,
-        borderRadius:12,
-        width:480,
-        overflowY:"auto",
-        maxHeight:"95%",
-        boxShadow:"0px 0px 15px rgba(0,0,0,0.3)"
-      }}>
-        <h2 style={{
-          textAlign:"center",
-          marginBottom:20,
-          color:"green",
-          fontWeight:"bold",
-          borderBottom:"3px solid green",
-          paddingBottom:10
-        }}>Create Profile</h2>
+  const renderSelectWithOther = (value, otherValue, options, label, mainKey, otherKey, setStateFunc) => (
+    <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
+      <select
+        style={getInputStyle(mainKey)}
+        value={value}
+        onChange={e => setStateFunc(prev => ({ ...prev, [mainKey]: e.target.value }))}
+      >
+        <option value="">{label}</option>
+        {options.map(o => <option key={o} value={o}>{o}</option>)}
+      </select>
+      {value === "Other" && (
+        <input
+          placeholder={`Enter ${label}`}
+          style={getInputStyle(otherKey)}
+          value={otherValue}
+          onChange={e => setStateFunc(prev => ({ ...prev, [otherKey]: e.target.value }))}
+        />
+      )}
+    </div>
+  );
 
+  return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "linear-gradient(to right, yellow, orange)" }}>
+      <div style={{ background: "#fff", padding: 20, borderRadius: 12, width: 500, maxHeight: "95vh", overflowY: "auto", boxShadow: "0px 0px 12px rgba(0,0,0,0.2)" }}>
+        <h2 style={{ textAlign: "center", marginBottom: 15, color: "green", fontWeight: "bold", borderBottom: "3px solid green", paddingBottom: "8px" }}>Create Profile</h2>
         <form onSubmit={handleSubmit}>
           {/* Personal Details */}
-          <h4 style={{color:"green"}}>Personal Details</h4>
-          <input placeholder="Name *" style={getInputStyle("name")} value={personal.name} onChange={e=>setPersonal({...personal,name:e.target.value})} />
-          <input placeholder="Email *" style={getInputStyle("email")} value={personal.email} onChange={e=>setPersonal({...personal,email:e.target.value})} />
-          <input placeholder="Phone *" style={getInputStyle("phone")} value={personal.phone} onChange={e=>setPersonal({...personal,phone:e.target.value})} />
-          <input placeholder="Gender *" style={getInputStyle("gender")} value={personal.gender} onChange={e=>setPersonal({...personal,gender:e.target.value})} />
-          <input type="date" style={getInputStyle("dob")} value={personal.dob} onChange={e=>setPersonal({...personal,dob:e.target.value})} />
+          <h4>Personal Details</h4>
+          <input placeholder="Name" style={getInputStyle("name")} value={personal.name} onChange={e => setPersonal({ ...personal, name: e.target.value })} />
+          <input placeholder="Email" style={getInputStyle("email")} value={personal.email} onChange={e => setPersonal({ ...personal, email: e.target.value })} />
+          <input placeholder="Phone" style={getInputStyle("phone")} value={personal.phone} onChange={e => setPersonal({ ...personal, phone: e.target.value })} />
+          <input placeholder="Gender" style={getInputStyle("gender")} value={personal.gender} onChange={e => setPersonal({ ...personal, gender: e.target.value })} />
+          <input type="date" style={getInputStyle("dob")} value={personal.dob} onChange={e => setPersonal({ ...personal, dob: e.target.value })} />
 
-          {/* Address Details */}
-          <h4 style={{color:"green"}}>Address Details</h4>
-          <select style={getInputStyle("country")} value={address.country} onChange={e=>setAddress({...address,country:e.target.value})}>
-            <option value="">Select Country *</option>{countries.map(c=><option key={c} value={c}>{c}</option>)}
-          </select>
-          <input placeholder="Other Country" style={getInputStyle("otherCountry")} value={address.otherCountry} onChange={e=>setAddress({...address,otherCountry:e.target.value})} />
+          {/* Address */}
+          <h4>Address Details</h4>
+          {renderSelectWithOther(address.country, address.otherCountry, countries, "Select Country", "country", "otherCountry", setAddress)}
+          {renderSelectWithOther(address.state, address.otherState, states, "Select State", "state", "otherState", setAddress)}
+          {renderSelectWithOther(address.district, address.otherDistrict, districts, "Select District", "district", "otherDistrict", setAddress)}
+          <input placeholder="Address Line" style={getInputStyle("line")} value={address.line} onChange={e => setAddress({ ...address, line: e.target.value })} />
 
-          <select style={getInputStyle("state")} value={address.state} onChange={e=>setAddress({...address,state:e.target.value})}>
-            <option value="">Select State *</option>{states.map(s=><option key={s} value={s}>{s}</option>)}
-          </select>
-          <input placeholder="Other State" style={getInputStyle("otherState")} value={address.otherState} onChange={e=>setAddress({...address,otherState:e.target.value})} />
+          {/* 10th */}
+          <h4>10th Details</h4>
+          {renderSelectWithOther(education.tenth.school, education.tenth.otherSchool, schools, "Select School", "school", "otherSchool", (val) => setEducation(prev => ({ ...prev, tenth: { ...prev.tenth, ...val } })))}
+          <input placeholder="Place" style={getInputStyle("tenthPlace")} value={education.tenth.place} onChange={e => setEducation(prev => ({ ...prev, tenth: { ...prev.tenth, place: e.target.value } }))} />
+          <input placeholder="Percentage" style={getInputStyle("tenthPercentage")} value={education.tenth.percentage} onChange={e => setEducation(prev => ({ ...prev, tenth: { ...prev.tenth, percentage: e.target.value } }))} />
 
-          <select style={getInputStyle("district")} value={address.district} onChange={e=>setAddress({...address,district:e.target.value})}>
-            <option value="">Select District *</option>{districts.map(d=><option key={d} value={d}>{d}</option>)}
-          </select>
-          <input placeholder="Other District" style={getInputStyle("otherDistrict")} value={address.otherDistrict} onChange={e=>setAddress({...address,otherDistrict:e.target.value})} />
+          {/* 12th */}
+          <h4>12th Details</h4>
+          {renderSelectWithOther(education.twelfth.school, education.twelfth.otherSchool, schools, "Select School", "school", "otherSchool", (val) => setEducation(prev => ({ ...prev, twelfth: { ...prev.twelfth, ...val } })))}
+          <input placeholder="Place" style={getInputStyle("twelfthPlace")} value={education.twelfth.place} onChange={e => setEducation(prev => ({ ...prev, twelfth: { ...prev.twelfth, place: e.target.value } }))} />
+          <input placeholder="Percentage" style={getInputStyle("twelfthPercentage")} value={education.twelfth.percentage} onChange={e => setEducation(prev => ({ ...prev, twelfth: { ...prev.twelfth, percentage: e.target.value } }))} />
 
-          <input placeholder="Address Line *" style={getInputStyle("line")} value={address.line} onChange={e=>setAddress({...address,line:e.target.value})} />
-
-          {/* 10th Details */}
-          <h4 style={{color:"green"}}>10th Details</h4>
-          <select style={getInputStyle("tenthSchool")} value={education.tenth.school} onChange={e=>setEducation({...education,tenth:{...education.tenth,school:e.target.value}})}>
-            <option value="">Select School *</option>{schools.map(s=><option key={s} value={s}>{s}</option>)}
-          </select>
-          <input placeholder="Other School" style={getInputStyle("tenthOtherSchool")} value={education.tenth.otherSchool} onChange={e=>setEducation({...education,tenth:{...education.tenth,otherSchool:e.target.value}})} />
-          <input placeholder="Place *" style={getInputStyle("tenthPlace")} value={education.tenth.place} onChange={e=>setEducation({...education,tenth:{...education.tenth,place:e.target.value}})} />
-          <input placeholder="Percentage *" style={getInputStyle("tenthPercentage")} value={education.tenth.percentage} onChange={e=>setEducation({...education,tenth:{...education.tenth,percentage:e.target.value}})} />
-
-          {/* 12th Details */}
-          <h4 style={{color:"green"}}>12th Details</h4>
-          <select style={getInputStyle("twelfthSchool")} value={education.twelfth.school} onChange={e=>setEducation({...education,twelfth:{...education.twelfth,school:e.target.value}})}>
-            <option value="">Select School *</option>{schools.map(s=><option key={s} value={s}>{s}</option>)}
-          </select>
-          <input placeholder="Other School" style={getInputStyle("twelfthOtherSchool")} value={education.twelfth.otherSchool} onChange={e=>setEducation({...education,twelfth:{...education.twelfth,otherSchool:e.target.value}})} />
-          <input placeholder="Place *" style={getInputStyle("twelfthPlace")} value={education.twelfth.place} onChange={e=>setEducation({...education,twelfth:{...education.twelfth,place:e.target.value}})} />
-          <input placeholder="Percentage *" style={getInputStyle("twelfthPercentage")} value={education.twelfth.percentage} onChange={e=>setEducation({...education,twelfth:{...education.twelfth,percentage:e.target.value}})} />
-
-          {/* UG Details */}
-          <h4 style={{color:"green"}}>UG Details</h4>
-          <select style={getInputStyle("ugUniversity")} value={education.ug.university} onChange={e=>setEducation({...education,ug:{...education.ug,university:e.target.value}})}>
-            <option value="">Select University *</option>{universities.map(u=><option key={u} value={u}>{u}</option>)}
-          </select>
-          <input placeholder="Other University" style={getInputStyle("ugOtherUniversity")} value={education.ug.otherUniversity} onChange={e=>setEducation({...education,ug:{...education.ug,otherUniversity:e.target.value}})} />
-
-          <select style={getInputStyle("ugCollege")} value={education.ug.college} onChange={e=>setEducation({...education,ug:{...education.ug,college:e.target.value}})}>
-            <option value="">Select College *</option>{colleges.map(c=><option key={c} value={c}>{c}</option>)}
-          </select>
-          <input placeholder="Other College" style={getInputStyle("ugOtherCollege")} value={education.ug.otherCollege} onChange={e=>setEducation({...education,ug:{...education.ug,otherCollege:e.target.value}})} />
-
-          <select style={getInputStyle("ugDepartment")} value={education.ug.department} onChange={e=>setEducation({...education,ug:{...education.ug,department:e.target.value}})}>
-            <option value="">Select Department *</option>{departments.map(d=><option key={d} value={d}>{d}</option>)}
-          </select>
-          <input placeholder="Other Department" style={getInputStyle("ugOtherDepartment")} value={education.ug.otherDepartment} onChange={e=>setEducation({...education,ug:{...education.ug,otherDepartment:e.target.value}})} />
-
-          <input placeholder="CGPA" style={getInputStyle("ugCgpa")} value={education.ug.cgpa} onChange={e=>setEducation({...education,ug:{...education.ug,cgpa:e.target.value}})} />
-          <input placeholder="Graduation Year" style={getInputStyle("ugGraduationYear")} value={education.ug.graduationYear} onChange={e=>setEducation({...education,ug:{...education.ug,graduationYear:e.target.value}})} />
-          <input placeholder="Place" style={getInputStyle("ugPlace")} value={education.ug.place} onChange={e=>setEducation({...education,ug:{...education.ug,place:e.target.value}})} />
-          <select style={getInputStyle("ugActiveBacklogs")} value={education.ug.activeBacklogs} onChange={e=>setEducation({...education,ug:{...education.ug,activeBacklogs:e.target.value}})}>
+          {/* UG */}
+          <h4>UG Details</h4>
+          {renderSelectWithOther(education.ug.university, education.ug.otherUniversity, universities, "Select University", "university", "otherUniversity", (val) => setEducation(prev => ({ ...prev, ug: { ...prev.ug, ...val } })))}
+          {renderSelectWithOther(education.ug.college, education.ug.otherCollege, colleges, "Select College", "college", "otherCollege", (val) => setEducation(prev => ({ ...prev, ug: { ...prev.ug, ...val } })))}
+          {renderSelectWithOther(education.ug.department, education.ug.otherDepartment, departments, "Select Department", "department", "otherDepartment", (val) => setEducation(prev => ({ ...prev, ug: { ...prev.ug, ...val } })))}
+          <input placeholder="CGPA" style={getInputStyle("ugCgpa")} value={education.ug.cgpa} onChange={e => setEducation(prev => ({ ...prev, ug: { ...prev.ug, cgpa: e.target.value } }))} />
+          <input placeholder="Graduation Year" style={getInputStyle("ugGraduationYear")} value={education.ug.graduationYear} onChange={e => setEducation(prev => ({ ...prev, ug: { ...prev.ug, graduationYear: e.target.value } }))} />
+          <input placeholder="Place" style={getInputStyle("ugPlace")} value={education.ug.place} onChange={e => setEducation(prev => ({ ...prev, ug: { ...prev.ug, place: e.target.value } }))} />
+          <select style={getInputStyle("ugActiveBacklogs")} value={education.ug.activeBacklogs} onChange={e => setEducation(prev => ({ ...prev, ug: { ...prev.ug, activeBacklogs: e.target.value } }))}>
             <option value="">Active Backlogs?</option>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
           </select>
 
-          <button type="submit" style={{
-            padding:12,
-            background:"green",
-            color:"#fff",
-            border:"none",
-            borderRadius:6,
-            width:"100%",
-            marginTop:15,
-            fontWeight:"bold",
-            cursor:"pointer"
-          }}>Save Profile</button>
+          <button type="submit" style={{ padding: 10, background: "green", color: "#fff", border: "none", borderRadius: 6, width: "100%", marginTop: 10, fontWeight: "bold", cursor: "pointer" }}>Save Profile</button>
         </form>
       </div>
     </div>
