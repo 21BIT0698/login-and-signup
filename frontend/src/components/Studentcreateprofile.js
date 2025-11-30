@@ -132,7 +132,6 @@ export default function CreateProfile() {
   <option value="Male">Male</option>
   <option value="Female">Female</option>
 </select>
-
           <input type="date" style={getInputStyle("dob")} value={personal.dob} onChange={e => setPersonal({ ...personal, dob: e.target.value })} required />
 
           {/* Address Details */}
