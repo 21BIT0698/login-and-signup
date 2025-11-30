@@ -126,7 +126,7 @@ export default function CreateProfile() {
           <input type="date" style={getInputStyle("dob")} value={personal.dob} onChange={e => setPersonal({ ...personal, dob: e.target.value })} required />
 
           {/* Address Details */}
-          <h4 style={{ color: "green" }}>Address Details</h4>
+          <h4 style={{ color: "darkgreen" }}>Address Details</h4>
           <select style={getInputStyle("country")} value={address.country} onChange={e => setAddress({ ...address, country: e.target.value })} required>
             <option value="">Select Country</option>{countries.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
