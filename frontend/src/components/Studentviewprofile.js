@@ -120,70 +120,70 @@ export default function CreateProfile() {
 
           {/* Personal Details */}
           <h4 style={{ color: "green" }}>Personal Details</h4>
-          <input placeholder="Name" style={getInputStyle("name")} value={personal.name} onChange={e => setPersonal({ ...personal, name: e.target.value })} />
-          <input placeholder="Email" style={getInputStyle("email")} value={personal.email} onChange={e => setPersonal({ ...personal, email: e.target.value })} />
-          <input placeholder="Phone" style={getInputStyle("phone")} value={personal.phone} onChange={e => setPersonal({ ...personal, phone: e.target.value })} />
-          <input placeholder="Gender" style={getInputStyle("gender")} value={personal.gender} onChange={e => setPersonal({ ...personal, gender: e.target.value })} />
-          <input type="date" style={getInputStyle("dob")} value={personal.dob} onChange={e => setPersonal({ ...personal, dob: e.target.value })} />
+          <input placeholder="Name" style={getInputStyle("name")} value={personal.name} onChange={e => setPersonal({ ...personal, name: e.target.value })} required />
+          <input placeholder="Email" style={getInputStyle("email")} value={personal.email} onChange={e => setPersonal({ ...personal, email: e.target.value })} required />
+          <input placeholder="Phone" style={getInputStyle("phone")} value={personal.phone} onChange={e => setPersonal({ ...personal, phone: e.target.value })} required />
+          <input placeholder="Gender" style={getInputStyle("gender")} value={personal.gender} onChange={e => setPersonal({ ...personal, gender: e.target.value })} required />
+          <input type="date" style={getInputStyle("dob")} value={personal.dob} onChange={e => setPersonal({ ...personal, dob: e.target.value })} required />
 
           {/* Address Details */}
           <h4 style={{ color: "green" }}>Address Details</h4>
-          <select style={getInputStyle("country")} value={address.country} onChange={e => setAddress({ ...address, country: e.target.value })}>
+          <select style={getInputStyle("country")} value={address.country} onChange={e => setAddress({ ...address, country: e.target.value })} required>
             <option value="">Select Country</option>{countries.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
-          {address.country === "Other" && <input placeholder="Enter Country" style={getInputStyle("otherCountry")} value={address.otherCountry} onChange={e => setAddress({ ...address, otherCountry: e.target.value })} />}
+          {address.country === "Other" && <input placeholder="Enter Country" style={getInputStyle("otherCountry")} value={address.otherCountry} onChange={e => setAddress({ ...address, otherCountry: e.target.value })} required />}
 
-          <select style={getInputStyle("state")} value={address.state} onChange={e => setAddress({ ...address, state: e.target.value })}>
+          <select style={getInputStyle("state")} value={address.state} onChange={e => setAddress({ ...address, state: e.target.value })} required>
             <option value="">Select State</option>{states.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
-          {address.state === "Other" && <input placeholder="Enter State" style={getInputStyle("otherState")} value={address.otherState} onChange={e => setAddress({ ...address, otherState: e.target.value })} />}
+          {address.state === "Other" && <input placeholder="Enter State" style={getInputStyle("otherState")} value={address.otherState} onChange={e => setAddress({ ...address, otherState: e.target.value })} required />}
 
-          <select style={getInputStyle("district")} value={address.district} onChange={e => setAddress({ ...address, district: e.target.value })}>
+          <select style={getInputStyle("district")} value={address.district} onChange={e => setAddress({ ...address, district: e.target.value })} required>
             <option value="">Select District</option>{districts.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
-          {address.district === "Other" && <input placeholder="Enter District" style={getInputStyle("otherDistrict")} value={address.otherDistrict} onChange={e => setAddress({ ...address, otherDistrict: e.target.value })} />}
+          {address.district === "Other" && <input placeholder="Enter District" style={getInputStyle("otherDistrict")} value={address.otherDistrict} onChange={e => setAddress({ ...address, otherDistrict: e.target.value })} required />}
 
-          <input placeholder="Address Line" style={getInputStyle("line")} value={address.line} onChange={e => setAddress({ ...address, line: e.target.value })} />
+          <input placeholder="Address Line" style={getInputStyle("line")} value={address.line} onChange={e => setAddress({ ...address, line: e.target.value })} required />
 
           {/* 10th Details */}
           <h4 style={{ color: "green" }}>10th Details</h4>
-          <select style={getInputStyle("tenthSchool")} value={education.tenth.school} onChange={e => setEducation({ ...education, tenth: { ...education.tenth, school: e.target.value } })}>
+          <select style={getInputStyle("tenthSchool")} value={education.tenth.school} onChange={e => setEducation({ ...education, tenth: { ...education.tenth, school: e.target.value } })} required>
             <option value="">Select School</option>{schools.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
-          {education.tenth.school === "Other" && <input placeholder="Enter School" style={getInputStyle("tenthOtherSchool")} value={education.tenth.otherSchool} onChange={e => setEducation({ ...education, tenth: { ...education.tenth, otherSchool: e.target.value } })} />}
-          <input placeholder="Place" style={getInputStyle("tenthPlace")} value={education.tenth.place} onChange={e => setEducation({ ...education, tenth: { ...education.tenth, place: e.target.value } })} />
-          <input placeholder="Percentage" style={getInputStyle("tenthPercentage")} value={education.tenth.percentage} onChange={e => setEducation({ ...education, tenth: { ...education.tenth, percentage: e.target.value } })} />
+          {education.tenth.school === "Other" && <input placeholder="Enter School" style={getInputStyle("tenthOtherSchool")} value={education.tenth.otherSchool} onChange={e => setEducation({ ...education, tenth: { ...education.tenth, otherSchool: e.target.value } })} required />}
+          <input placeholder="Place" style={getInputStyle("tenthPlace")} value={education.tenth.place} onChange={e => setEducation({ ...education, tenth: { ...education.tenth, place: e.target.value } })} required />
+          <input placeholder="Percentage" style={getInputStyle("tenthPercentage")} value={education.tenth.percentage} onChange={e => setEducation({ ...education, tenth: { ...education.tenth, percentage: e.target.value } })} required />
 
           {/* 12th Details */}
           <h4 style={{ color: "green" }}>12th Details</h4>
-          <select style={getInputStyle("twelfthSchool")} value={education.twelfth.school} onChange={e => setEducation({ ...education, twelfth: { ...education.twelfth, school: e.target.value } })}>
+          <select style={getInputStyle("twelfthSchool")} value={education.twelfth.school} onChange={e => setEducation({ ...education, twelfth: { ...education.twelfth, school: e.target.value } })} required>
             <option value="">Select School</option>{schools.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
-          {education.twelfth.school === "Other" && <input placeholder="Enter School" style={getInputStyle("twelfthOtherSchool")} value={education.twelfth.otherSchool} onChange={e => setEducation({ ...education, twelfth: { ...education.twelfth, otherSchool: e.target.value } })} />}
-          <input placeholder="Place" style={getInputStyle("twelfthPlace")} value={education.twelfth.place} onChange={e => setEducation({ ...education, twelfth: { ...education.twelfth, place: e.target.value } })} />
-          <input placeholder="Percentage" style={getInputStyle("twelfthPercentage")} value={education.twelfth.percentage} onChange={e => setEducation({ ...education, twelfth: { ...education.twelfth, percentage: e.target.value } })} />
+          {education.twelfth.school === "Other" && <input placeholder="Enter School" style={getInputStyle("twelfthOtherSchool")} value={education.twelfth.otherSchool} onChange={e => setEducation({ ...education, twelfth: { ...education.twelfth, otherSchool: e.target.value } })} required />}
+          <input placeholder="Place" style={getInputStyle("twelfthPlace")} value={education.twelfth.place} onChange={e => setEducation({ ...education, twelfth: { ...education.twelfth, place: e.target.value } })} required />
+          <input placeholder="Percentage" style={getInputStyle("twelfthPercentage")} value={education.twelfth.percentage} onChange={e => setEducation({ ...education, twelfth: { ...education.twelfth, percentage: e.target.value } })} required />
 
           {/* UG Details */}
           <h4 style={{ color: "green" }}>UG Details</h4>
-          <select style={getInputStyle("ugUniversity")} value={education.ug.university} onChange={e => setEducation({ ...education, ug: { ...education.ug, university: e.target.value } })}>
+          <select style={getInputStyle("ugUniversity")} value={education.ug.university} onChange={e => setEducation({ ...education, ug: { ...education.ug, university: e.target.value } })} required>
             <option value="">Select University</option>{universities.map(u => <option key={u} value={u}>{u}</option>)}
           </select>
-          {education.ug.university === "Other" && <input placeholder="Enter University" style={getInputStyle("ugOtherUniversity")} value={education.ug.otherUniversity} onChange={e => setEducation({ ...education, ug: { ...education.ug, otherUniversity: e.target.value } })} />}
+          {education.ug.university === "Other" && <input placeholder="Enter University" style={getInputStyle("ugOtherUniversity")} value={education.ug.otherUniversity} onChange={e => setEducation({ ...education, ug: { ...education.ug, otherUniversity: e.target.value } })} required />}
 
-          <select style={getInputStyle("ugCollege")} value={education.ug.college} onChange={e => setEducation({ ...education, ug: { ...education.ug, college: e.target.value } })}>
+          <select style={getInputStyle("ugCollege")} value={education.ug.college} onChange={e => setEducation({ ...education, ug: { ...education.ug, college: e.target.value } })} required>
             <option value="">Select College</option>{colleges.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
-          {education.ug.college === "Other" && <input placeholder="Enter College" style={getInputStyle("ugOtherCollege")} value={education.ug.otherCollege} onChange={e => setEducation({ ...education, ug: { ...education.ug, otherCollege: e.target.value } })} />}
+          {education.ug.college === "Other" && <input placeholder="Enter College" style={getInputStyle("ugOtherCollege")} value={education.ug.otherCollege} onChange={e => setEducation({ ...education, ug: { ...education.ug, otherCollege: e.target.value } })} required />}
 
-          <select style={getInputStyle("ugDepartment")} value={education.ug.department} onChange={e => setEducation({ ...education, ug: { ...education.ug, department: e.target.value } })}>
+          <select style={getInputStyle("ugDepartment")} value={education.ug.department} onChange={e => setEducation({ ...education, ug: { ...education.ug, department: e.target.value } })} required>
             <option value="">Select Department</option>{departments.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
-          {education.ug.department === "Other" && <input placeholder="Enter Department" style={getInputStyle("ugOtherDepartment")} value={education.ug.otherDepartment} onChange={e => setEducation({ ...education, ug: { ...education.ug, otherDepartment: e.target.value } })} />}
+          {education.ug.department === "Other" && <input placeholder="Enter Department" style={getInputStyle("ugOtherDepartment")} value={education.ug.otherDepartment} onChange={e => setEducation({ ...education, ug: { ...education.ug, otherDepartment: e.target.value } })} required />}
 
-          <input placeholder="CGPA" style={getInputStyle("ugCgpa")} value={education.ug.cgpa} onChange={e => setEducation({ ...education, ug: { ...education.ug, cgpa: e.target.value } })} />
-          <input placeholder="Graduation Year" style={getInputStyle("ugGraduationYear")} value={education.ug.graduationYear} onChange={e => setEducation({ ...education, ug: { ...education.ug, graduationYear: e.target.value } })} />
-          <input placeholder="Place" style={getInputStyle("ugPlace")} value={education.ug.place} onChange={e => setEducation({ ...education, ug: { ...education.ug, place: e.target.value } })} />
-          <select style={getInputStyle("ugActiveBacklogs")} value={education.ug.activeBacklogs} onChange={e => setEducation({ ...education, ug: { ...education.ug, activeBacklogs: e.target.value } })}>
+          <input placeholder="CGPA" style={getInputStyle("ugCgpa")} value={education.ug.cgpa} onChange={e => setEducation({ ...education, ug: { ...education.ug, cgpa: e.target.value } })} required />
+          <input placeholder="Graduation Year" style={getInputStyle("ugGraduationYear")} value={education.ug.graduationYear} onChange={e => setEducation({ ...education, ug: { ...education.ug, graduationYear: e.target.value } })} required />
+          <input placeholder="Place" style={getInputStyle("ugPlace")} value={education.ug.place} onChange={e => setEducation({ ...education, ug: { ...education.ug, place: e.target.value } })} required />
+          <select style={getInputStyle("ugActiveBacklogs")} value={education.ug.activeBacklogs} onChange={e => setEducation({ ...education, ug: { ...education.ug, activeBacklogs: e.target.value } })} required>
             <option value="">Active Backlogs?</option>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
