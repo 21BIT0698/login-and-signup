@@ -119,7 +119,7 @@ export default function CreateProfile() {
         <form onSubmit={handleSubmit}>
 
           {/* Personal Details */}
-          <h4 style={{ color: "green", fontWeight: "bold", marginTop: 20, marginBottom: 10 }}>Personal Details</h4>
+          <h4 style={{ color: "#008000", fontWeight: "bold", marginTop: 20, marginBottom: 10 }}>Personal Details</h4>
           <input placeholder="Name" style={getInputStyle("name")} value={personal.name} onChange={e => setPersonal({ ...personal, name: e.target.value })} required />
           <input placeholder="Email" style={getInputStyle("email")} value={personal.email} onChange={e => setPersonal({ ...personal, email: e.target.value })} required />
           <input placeholder="Phone" style={getInputStyle("phone")} value={personal.phone} onChange={e => setPersonal({ ...personal, phone: e.target.value })} required />
