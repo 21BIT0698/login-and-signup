@@ -140,7 +140,7 @@ export default function CreateProfile() {
         <form onSubmit={handleSubmit}>
 
           {/* Personal Details */}
-          <h4>Personal Details</h4>
+          <h4 style={{ color: "green", marginTop: 15 }}>Personal Details</h4>
           <input placeholder="Name" style={getInputStyle("name")} value={personal.name} onChange={e=>setPersonal({...personal,name:e.target.value})} />
           <input placeholder="Email" style={getInputStyle("email")} value={personal.email} onChange={e=>setPersonal({...personal,email:e.target.value})} />
           <input placeholder="Phone" style={getInputStyle("phone")} value={personal.phone} onChange={e=>setPersonal({...personal,phone:e.target.value})} />
@@ -148,7 +148,7 @@ export default function CreateProfile() {
           <input type="date" style={getInputStyle("dob")} value={personal.dob} onChange={e=>setPersonal({...personal,dob:e.target.value})} />
 
           {/* Address Details */}
-          <h4>Address Details</h4>
+          <h4 style={{ color: "green", marginTop: 15 }}>Address Details</h4>
           <select style={getInputStyle("country")} value={address.country} onChange={e=>setAddress({...address,country:e.target.value})}>
             <option value="">Select Country</option>
             {countries.map(c=><option key={c} value={c}>{c}</option>)}
@@ -170,7 +170,7 @@ export default function CreateProfile() {
           <input placeholder="Address Line" style={getInputStyle("line")} value={address.line} onChange={e=>setAddress({...address,line:e.target.value})} />
 
           {/* 10th Details */}
-          <h4>10th Details</h4>
+          <h4 style={{ color: "green", marginTop: 15 }}>10th Details</h4>
           <select style={getInputStyle("tenthSchool")} value={education.tenth.school} onChange={e=>setEducation({...education,tenth:{...education.tenth,school:e.target.value}})}>
             <option value="">Select School</option>
             {schools.map(s=><option key={s} value={s}>{s}</option>)}
@@ -190,7 +190,7 @@ export default function CreateProfile() {
           <input placeholder="Percentage" style={getInputStyle("twelfthPercentage")} value={education.twelfth.percentage} onChange={e=>setEducation({...education,twelfth:{...education.twelfth,percentage:e.target.value}})} />
 
           {/* UG Details */}
-          <h4>UG Details</h4>
+          <h4 style={{ color: "green", marginTop: 15 }}>UG Details</h4>
           <select style={getInputStyle("ugUniversity")} value={education.ug.university} onChange={e=>setEducation({...education,ug:{...education.ug,university:e.target.value}})}>
             <option value="">Select University</option>
             {universities.map(u=><option key={u} value={u}>{u}</option>)}
